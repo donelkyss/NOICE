@@ -15,10 +15,10 @@ PODS:
     - FirebaseInstanceID (~> 1.0)
     - GoogleInterchangeUtilities (~> 1.2)
     - GoogleSymbolUtilities (~> 1.1)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseCore (3.4.5):
     - GoogleInterchangeUtilities (~> 1.2)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (1.0.8)
   - Google/Core (3.0.3):
     - FirebaseAnalytics (~> 3.2)
@@ -31,20 +31,20 @@ PODS:
     - GoogleSymbolUtilities (~> 1.1)
   - GoogleSignIn (4.0.1):
     - GoogleAppUtilities (~> 1.1)
-    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
     - GTMOAuth2 (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
   - GoogleSymbolUtilities (1.1.2)
   - GoogleToolboxForMac/DebugUtils (2.1.0):
     - GoogleToolboxForMac/Defines (= 2.1.0)
   - GoogleToolboxForMac/Defines (2.1.0)
-  - GoogleToolboxForMac/NSData+zlib (2.1.0):
+  - "GoogleToolboxForMac/NSData+zlib (2.1.0)":
     - GoogleToolboxForMac/Defines (= 2.1.0)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.0):
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.0)":
     - GoogleToolboxForMac/DebugUtils (= 2.1.0)
     - GoogleToolboxForMac/Defines (= 2.1.0)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.0)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.0)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.0)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.1.0)"
   - GTMOAuth2 (1.1.4):
     - GTMSessionFetcher (~> 1.1)
   - GTMSessionFetcher (1.1.7):
@@ -62,6 +62,26 @@ DEPENDENCIES:
   - FBSDKLoginKit
   - Google/SignIn
   - JSQMessagesViewController
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Bolts
+    - Canvas
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseInstanceID
+    - Google
+    - GoogleAppUtilities
+    - GoogleInterchangeUtilities
+    - GoogleSignIn
+    - GoogleSymbolUtilities
+    - GoogleToolboxForMac
+    - GTMOAuth2
+    - GTMSessionFetcher
+    - JSQMessagesViewController
+    - JSQSystemSoundPlayer
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -84,4 +104,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a8d0d586cd5fe1d47ac5c8313f10e7527e413c42
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.6.0.beta.1

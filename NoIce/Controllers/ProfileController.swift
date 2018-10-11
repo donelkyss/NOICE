@@ -19,25 +19,39 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     var camaraController: UIImagePickerController!
     
     //VISUAL VARS
-    @IBOutlet weak var fotoperfil: UIImageView!
     @IBOutlet weak var UserPerfilView: UIView!
+   
+    //CUSTOM CONTRAINS
+    @IBOutlet weak var profilePhotoHeight: NSLayoutConstraint!
+    @IBOutlet weak var profilePhotoTop: NSLayoutConstraint!
+    @IBOutlet weak var distanceBetweenButtons: NSLayoutConstraint!
+    @IBOutlet weak var distanceSignOutShareButtons: NSLayoutConstraint!
+    @IBOutlet weak var buttonsHeight: NSLayoutConstraint!
+    
     
     @IBOutlet weak var userPerfilPhoto: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.fotoperfil.contentMode = .scaleAspectFill
-        self.fotoperfil.layer.cornerRadius = self.userPerfilPhoto.frame.height / 4
-        self.fotoperfil.clipsToBounds = true
-        
-        self.userPerfilPhoto.contentMode = .scaleAspectFill
-        self.userPerfilPhoto.layer.cornerRadius = self.userPerfilPhoto.frame.height / 4
-        self.userPerfilPhoto.clipsToBounds = true
-        self.userPerfilPhoto.image = myvariables.userperfil.FotoPerfil
-        
         self.camaraController = UIImagePickerController()
         self.camaraController.delegate = self
 
+        //Define value for Custom Contrains
+        let screenSize = UIScreen.main.bounds
+       
+        self.profilePhotoHeight.constant = screenSize.height / 4
+       
+        self.profilePhotoTop.constant = self.profilePhotoHeight.constant / 2
+   
+        self.buttonsHeight.constant = screenSize.height / 14
+      
+        self.distanceBetweenButtons.constant = screenSize.height / 36
+        self.distanceSignOutShareButtons.constant = screenSize.height / 36
+        
+        self.userPerfilPhoto.contentMode = .scaleAspectFill
+        self.userPerfilPhoto.layer.cornerRadius = self.profilePhotoHeight.constant / 6
+        self.userPerfilPhoto.clipsToBounds = true
+        self.userPerfilPhoto.image = myvariables.userperfil.FotoPerfil
         // Do any additional setup after loading the view.
     }
 

@@ -17,6 +17,7 @@ import FBSDKLoginKit
 struct myvariables {
     static var chatsOpen = [CUser]()
     static var userperfil: CUser!
+    static var currentPosition = CLLocation()
     static var usuariosMostrar = [CUser]()
     static var MensajesRecibidos = [CMensaje]()
     static var MensajesEnviados = [CMensaje]()
@@ -33,6 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
     var BackgroundSeconds = 0
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        //Avoid lock screen when app is open
+        application.isIdleTimerDisabled = true
         //GMSServices.provideAPIKey("AIzaSyBnKURUhbBUr74PbpPgtPA1driuRaTShGo")
         // Override point for customization after application launch.
         GIDSignIn.sharedInstance().delegate = self
@@ -137,10 +140,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         //self.saveContext()
-        /*if myvariables.userperfil != nil{
+        if myvariables.userperfil != nil{
             myvariables.userperfil.ActualizarConectado(estado: "0")
             sleep(2)
-        }*/
+        }
     }
     
     // Finished disconnecting |user| from the app successfully if |error| is |nil|.

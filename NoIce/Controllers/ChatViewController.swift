@@ -194,6 +194,16 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     }
 }
 
+extension JSQMessagesInputToolbar {
+    override open func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard let window = window else { return }
+        if #available(iOS 11.0, *) {
+            let anchor = window.safeAreaLayoutGuide.bottomAnchor
+            bottomAnchor.constraintLessThanOrEqualToSystemSpacingBelow(anchor, multiplier: 1.0).isActive = true
+        }
+    }
+}
 
 
 

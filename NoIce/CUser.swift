@@ -11,86 +11,6 @@ import Foundation
 import UIKit
 import CloudKit
 
-/*class CUser{
-    //Atributos
-    var NombreApellidos: String
-    var Email: String
-    var Telefono: String
-    var FotoPerfil: UIImage
-    var Posicion: CLLocation
-    var bloqueados: [String]!
-    
-    //Métodos
-    init(nombreapellidos: String, email: String){
-        self.NombreApellidos = nombreapellidos
-        self.Email = email
-        self.Telefono = "movil"
-        self.FotoPerfil = UIImage(named: "user")!
-        self.Posicion = CLLocation()
-        self.bloqueados = [String]()
-    }
-    
-    func RegistrarUser(){
-        let registroData: [String: Any] = [
-            "nombreApellidos": self.NombreApellidos,
-            "email": self.Email,
-            "telefono": self.Telefono,
-            "fotoPerfil": self.FotoPerfil,
-            "posicion": self.Posicion
-        ]
-        myvariables.socketConexion.emit("register", registroData)
-    }
-
-    func ActualizarFotoPerfil(photo: UIImage){
-        //Evento fotoUpdate
-        self.FotoPerfil = photo
-        let fotoData = [
-            "foto": self.FotoPerfil
-        ]
-        myvariables.socketConexion.emit("fotoUpdate", fotoData)
-        
-        //enviar foto al servidor
-    }
-    
-    func GuardarFotoPerfil(photo: UIImage){
-        self.FotoPerfil = photo
-    }
-    
-    func ActualizarPosicion(newPosicion: CLLocation) {
-        self.Posicion = newPosicion
-        let posicionData = [
-            "newPosicion": newPosicion
-        ]
-        myvariables.socketConexion.emit("posicion", posicionData)
-    }
-    
-    //RENDER IMAGEN
-    func saveImageToFile(_ image: UIImage) -> URL
-    {
-        let filemgr = FileManager.default
-        
-        let dirPaths = filemgr.urls(for: .documentDirectory,
-                                    in: .userDomainMask)
-        
-        let fileURL = dirPaths[0].appendingPathComponent("currentImage.jpg")
-        
-        if let renderedJPEGData =
-            UIImageJPEGRepresentation(image, 0.5) {
-            try! renderedJPEGData.write(to: fileURL)
-        }
-        
-        return fileURL
-    }
-    
-    func ActualizarBloqueo(emailBloqueado: String, completionHandler: @escaping(Bool)->()){
-        //
-    }
-    func CargarBloqueados(bloqueados: [String]){
-        self.bloqueados = bloqueados
-    }
-    
-}*/
-
 class CUser{
     //Atributos
     var NombreApellidos: String
@@ -322,3 +242,82 @@ class CUser{
     }
 }
 
+/*class CUser{
+ //Atributos
+ var NombreApellidos: String
+ var Email: String
+ var Telefono: String
+ var FotoPerfil: UIImage
+ var Posicion: CLLocation
+ var bloqueados: [String]!
+ 
+ //Métodos
+ init(nombreapellidos: String, email: String){
+ self.NombreApellidos = nombreapellidos
+ self.Email = email
+ self.Telefono = "movil"
+ self.FotoPerfil = UIImage(named: "user")!
+ self.Posicion = CLLocation()
+ self.bloqueados = [String]()
+ }
+ 
+ func RegistrarUser(){
+ let registroData: [String: Any] = [
+ "nombreApellidos": self.NombreApellidos,
+ "email": self.Email,
+ "telefono": self.Telefono,
+ "fotoPerfil": self.FotoPerfil,
+ "posicion": self.Posicion
+ ]
+ myvariables.socketConexion.emit("register", registroData)
+ }
+ 
+ func ActualizarFotoPerfil(photo: UIImage){
+ //Evento fotoUpdate
+ self.FotoPerfil = photo
+ let fotoData = [
+ "foto": self.FotoPerfil
+ ]
+ myvariables.socketConexion.emit("fotoUpdate", fotoData)
+ 
+ //enviar foto al servidor
+ }
+ 
+ func GuardarFotoPerfil(photo: UIImage){
+ self.FotoPerfil = photo
+ }
+ 
+ func ActualizarPosicion(newPosicion: CLLocation) {
+ self.Posicion = newPosicion
+ let posicionData = [
+ "newPosicion": newPosicion
+ ]
+ myvariables.socketConexion.emit("posicion", posicionData)
+ }
+ 
+ //RENDER IMAGEN
+ func saveImageToFile(_ image: UIImage) -> URL
+ {
+ let filemgr = FileManager.default
+ 
+ let dirPaths = filemgr.urls(for: .documentDirectory,
+ in: .userDomainMask)
+ 
+ let fileURL = dirPaths[0].appendingPathComponent("currentImage.jpg")
+ 
+ if let renderedJPEGData =
+ UIImageJPEGRepresentation(image, 0.5) {
+ try! renderedJPEGData.write(to: fileURL)
+ }
+ 
+ return fileURL
+ }
+ 
+ func ActualizarBloqueo(emailBloqueado: String, completionHandler: @escaping(Bool)->()){
+ //
+ }
+ func CargarBloqueados(bloqueados: [String]){
+ self.bloqueados = bloqueados
+ }
+ 
+ }*/

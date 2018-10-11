@@ -25,8 +25,8 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
     @IBOutlet weak var LoginView: UIView!
     @IBOutlet weak var LoadingView: UIView!
     @IBOutlet weak var FaceLoginBtn: FBSDKLoginButton!
-   
-  
+    
+    
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -45,16 +45,10 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
         }
         let buttonText = NSAttributedString(string: "Facebook")
         self.FaceLoginBtn.setAttributedTitle(buttonText, for: .normal)
-        self.getFBUserData()
         
-    
         self.camaraPerfilController = UIImagePickerController()
         self.camaraPerfilController.delegate = self
         
-        //MARK: -INICIALIZAR GEOLOCALIZACION
-        self.locationManager.delegate = self
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
         
         if self.appUpdateAvailable(){
             
@@ -67,6 +61,65 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
                 exit(0)
             }))
             self.present(alertaVersion, animated: true, completion: nil)
+            
+        }
+        
+        //MARK: -INICIALIZAR GEOLOCALIZACION
+        self.locationManager.delegate = self
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+        
+        if CLLocationManager.locationServicesEnabled(){
+            switch(CLLocationManager.authorizationStatus()) {
+            case .notDetermined, .restricted, .denied:
+                print("hereeee NO")
+                let locationAlert = UIAlertController (title: "Error de Localización", message: "Estimado cliente es necesario que active la localización de su dispositivo.", preferredStyle: .alert)
+                locationAlert.addAction(UIAlertAction(title: "Settings", style: .default, handler: {alerAction in
+                    if #available(iOS 10.0, *) {
+                        let settingsURL = URL(string: UIApplicationOpenSettingsURLString)!
+                        UIApplication.shared.open(settingsURL, options: [:], completionHandler: { success in
+                            if success{
+                                exit(0)
+                            }
+                        })
+                    } else {
+                        if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                            UIApplication.shared.openURL(url as URL)
+                            exit(0)
+                        }
+                    }
+                }))
+                locationAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: {alerAction in
+                    exit(0)
+                }))
+                self.present(locationAlert, animated: true, completion: nil)
+            case .authorizedAlways, .authorizedWhenInUse:
+                self.getFBUserData()
+                break
+            }
+        }else{
+            let locationAlert = UIAlertController (title: "Error de Localización", message: "Estimado cliente es necesario que active la localización de su dispositivo.", preferredStyle: .alert)
+            locationAlert.addAction(UIAlertAction(title: "Settings", style: .default, handler: {alerAction in
+                if #available(iOS 10.0, *) {
+                    
+                    let settingsURL = URL(string: UIApplicationOpenSettingsURLString)!
+                    UIApplication.shared.open(settingsURL, options: [:], completionHandler: { success in
+                        if success{
+                            exit(0)
+                        }
+                    })
+                } else {
+                    print("here checking")
+                    if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                        UIApplication.shared.openURL(url as URL)
+                        exit(0)
+                    }
+                }
+            }))
+            locationAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: {alerAction in
+                exit(0)
+            }))
+            self.present(locationAlert, animated: true, completion: nil)
             
         }
         
@@ -104,7 +157,6 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
                 }
             }
         }
-        ///Volumes/Datos/Ecuador/Desarrollo/UnTaxi/UnTaxi/LocationManager.swift:635:31: Ambiguous use of 'indexOfObject'
         return upgradeAvailable
     }
     
@@ -138,13 +190,13 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
                         myvariables.userperfil.ActualizarConectado(estado: "1")
                         
                         myvariables.userperfil.ActualizarPosicion(posicionActual: self.locationManager.location!)
-                            do{
-                                let photo = results?[0].value(forKey: "foto") as! CKAsset
-                                let photoPerfil = try Data(contentsOf: photo.fileURL as URL)
-                                myvariables.userperfil.GuardarFotoPerfil(photo: UIImage(data: photoPerfil)!)
-                            }catch{
-                                myvariables.userperfil.GuardarFotoPerfil(photo:UIImage(named: "user")!)
-                            }
+                        do{
+                            let photo = results?[0].value(forKey: "foto") as! CKAsset
+                            let photoPerfil = try Data(contentsOf: photo.fileURL as URL)
+                            myvariables.userperfil.GuardarFotoPerfil(photo: UIImage(data: photoPerfil)!)
+                        }catch{
+                            myvariables.userperfil.GuardarFotoPerfil(photo:UIImage(named: "user")!)
+                        }
                         myvariables.userperfil.CargarBloqueados(bloqueados: results?[0].value(forKey: "bloqueados") as! [String])
                         DispatchQueue.main.async {
                             self.LoadingView.isHidden = true
@@ -222,7 +274,7 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
     @IBAction func GmailLogin(_ sender: Any) {
         GIDSignIn.sharedInstance().signIn()
     }
-
+    
     @IBAction func FaceLogin(_ sender: Any) {
         
     }
@@ -238,64 +290,54 @@ class LoginController: UIViewController,GIDSignInDelegate,GIDSignInUIDelegate,UI
         
         if((FBSDKAccessToken.current()) != nil){
             self.LoadingView.isHidden = false
-            FBSDKGraphRequest(graphPath: "me",parameters: ["fields": "id, name, email, age_range"]).start(completionHandler: { (connection, result, error) -> Void in
+            FBSDKGraphRequest(graphPath: "me",parameters: ["fields": "id, name, email"]).start(completionHandler: { (connection, result, error) -> Void in
                 if (error == nil){
                     var facePerfil = result as! NSDictionary
-                    let temp = facePerfil["age_range"] as! NSDictionary
-                    if temp["min"] as! Int > 14 {
-                        myvariables.userperfil = CUser(nombreapellidos: facePerfil["name"] as! String, email: facePerfil["email"] as! String)
-                        let predicate = NSPredicate(format: "email = %@",facePerfil["email"] as! String)
-                        let query = CKQuery(recordType:"CUsuarios", predicate: predicate)
-                        self.loginContainer.publicCloudDatabase.perform(query, inZoneWith: nil, completionHandler: ({results, error in
-                            if (error == nil) {
-                                if results?.count == 0{
-                                    let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+                    myvariables.userperfil = CUser(nombreapellidos: facePerfil["name"] as! String, email: facePerfil["email"] as! String)
+                    let predicate = NSPredicate(format: "email = %@",facePerfil["email"] as! String)
+                    let query = CKQuery(recordType:"CUsuarios", predicate: predicate)
+                    self.loginContainer.publicCloudDatabase.perform(query, inZoneWith: nil, completionHandler: ({results, error in
+                        if (error == nil) {
+                            if results?.count == 0{
+                                let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
                                 
-                                    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertActionStyle.default, handler: {alerAction in
+                                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertActionStyle.default, handler: {alerAction in
                                     
                                     self.camaraPerfilController.sourceType = .camera
                                     self.camaraPerfilController.cameraCaptureMode = .photo
                                     self.camaraPerfilController.cameraDevice = .front
                                     self.present(self.camaraPerfilController, animated: true, completion: nil)
                                     
-                                    }))
-                                    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertActionStyle.destructive, handler: { action in
+                                }))
+                                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertActionStyle.destructive, handler: { action in
                                     exit(0)
-                                    }))
-                                    self.present(EditPhoto, animated: true, completion: nil)
-                                }else{
-                                    myvariables.userperfil.recordName = results?[0].recordID.recordName
-                                
-                                    myvariables.userperfil.ActualizarConectado(estado: "1")
-                                
-                                    myvariables.userperfil.ActualizarPosicion(posicionActual: self.locationManager.location!)
-                                    do{
-                                        let photo = results?[0].value(forKey: "foto") as! CKAsset
-                                        let photoPerfil = try Data(contentsOf: photo.fileURL as URL)
-                                        myvariables.userperfil.GuardarFotoPerfil(photo: UIImage(data: photoPerfil)!)
-                                    }catch{
-                                    myvariables.userperfil.GuardarFotoPerfil(photo:UIImage(named: "user")!)
-                                    }
-                                    myvariables.userperfil.CargarBloqueados(bloqueados: results?[0].value(forKey: "bloqueados") as! [String])
-                                    DispatchQueue.main.async {
-                                        self.LoadingView.isHidden = true
-                                        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! ViewController
-                                        self.navigationController?.show(vc, sender: nil)
-                                    }
-                                }
+                                }))
+                                self.present(EditPhoto, animated: true, completion: nil)
                             }else{
-                                print("ERROR DE CONSULTA " + error.debugDescription)
+                                myvariables.userperfil.recordName = results?[0].recordID.recordName
+                                
+                                myvariables.userperfil.ActualizarConectado(estado: "1")
+                                
+                                myvariables.userperfil.ActualizarPosicion(posicionActual: myvariables.currentPosition)
+                                do{
+                                    let photo = results?[0].value(forKey: "foto") as! CKAsset
+                                    let photoPerfil = try Data(contentsOf: photo.fileURL as URL)
+                                    myvariables.userperfil.GuardarFotoPerfil(photo: UIImage(data: photoPerfil)!)
+                                }catch{
+                                    myvariables.userperfil.GuardarFotoPerfil(photo:UIImage(named: "user")!)
+                                }
+                                myvariables.userperfil.CargarBloqueados(bloqueados: results?[0].value(forKey: "bloqueados") as! [String])
+                                DispatchQueue.main.async {
+                                    self.LoadingView.isHidden = true
+                                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! ViewController
+                                    self.navigationController?.show(vc, sender: nil)
+                                }
                             }
-                        }))
-                    }else{
-                        let EditPhoto = UIAlertController (title: NSLocalizedString("Terms of Use",comment:"Age Policy"), message: NSLocalizedString("To use this application is required you are older than 14 years old.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
-                        
-                        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Close"), style: UIAlertActionStyle.destructive, handler: { action in
-                            exit(0)
-                        }))
-                        self.present(EditPhoto, animated: true, completion: nil)
-                    }
-            }
+                        }else{
+                            print("ERROR DE CONSULTA " + error.debugDescription)
+                        }
+                    }))
+                }
             })
         }
     }

@@ -15,7 +15,6 @@ import CloudKit
 class ViewController: UIViewController, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate, UITextFieldDelegate{
     //MARK: - PROPIEDADES DE LA CLASE
     var locationManager = CLLocationManager()
-    var userLocation = CLLocationCoordinate2D()
     var camaraPerfilController: UIImagePickerController!
     var userTimer : Timer!
     
@@ -41,17 +40,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIImagePicker
         //MARK: -INICIALIZAR GEOLOCALIZACION
         self.locationManager.delegate = self
         self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         self.locationManager.startUpdatingLocation()
         
         self.navigationItem.setHidesBackButton(true, animated:true)
         
-        myvariables.userperfil.ActualizarPosicion(posicionActual: self.locationManager.location!)
+        myvariables.userperfil.ActualizarPosicion(posicionActual: myvariables.currentPosition)
 
         // Do any additional setup after loading the view, typically from a nib.
         
        //PARA MOSTRAR Y OCULTAR EL TECLADO
-    
+        
+        //CHECK LOCATION PERMISSIONS
+        if let tempLocation = self.locationManager.location{
+            myvariables.currentPosition = tempLocation
+        }else{
+            let locationAlert = UIAlertController (title: "Error de Localización", message: "Estimado cliente es necesario que active la localización de su dispositivo.", preferredStyle: .alert)
+            locationAlert.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: {alerAction in
+                if #available(iOS 10.0, *) {
+                    let settingsURL = URL(string: UIApplicationOpenSettingsURLString)!
+                    UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+                } else {
+                    if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                        UIApplication.shared.openURL(url as URL)
+                    }
+                }
+            }))
+            locationAlert.addAction(UIAlertAction(title: "No", style: .default, handler: {alerAction in
+                exit(0)
+            }))
+            self.present(locationAlert, animated: true, completion: nil)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -124,7 +143,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIImagePicker
                     print("ERROR DE CONSULTA " + error.debugDescription)
                 }
                 DispatchQueue.main.async {
-                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "UserConnected") as! UserViewController
+                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "UsersConnected") as! UsersConnected
                     self.navigationController?.show(vc, sender: nil)
                 }
             }))

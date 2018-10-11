@@ -55,7 +55,6 @@ class UserViewController: UITableViewController {
         cell.UserConectedImage.contentMode = .scaleAspectFill
         cell.UserConectedImage.clipsToBounds = true
         if myvariables.usuariosMostrar[indexPath.row].NewMsg == true {
-            print("hereeee")
                 cell.NewMsg.isHidden = false
         }else{
                 cell.NewMsg.isHidden = true
