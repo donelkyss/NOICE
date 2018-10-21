@@ -7,12 +7,11 @@
 //
 
 import UIKit
-import GGLSignIn
-import GoogleSignIn
 import CloudKit
 import AssetsLibrary
 import FBSDKCoreKit
 import FBSDKLoginKit
+import CoreImage
 
 class ProfileController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
@@ -52,7 +51,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
         self.userPerfilPhoto.layer.cornerRadius = self.profilePhotoHeight.constant / 6
         self.userPerfilPhoto.clipsToBounds = true
         self.userPerfilPhoto.image = myvariables.userperfil.FotoPerfil
-        // Do any additional setup after loading the view.
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,9 +68,41 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
                 if camaraController.cameraDevice == .front{
                 let stringType = type as! String
                 self.camaraController.dismiss(animated: true, completion: nil)
-                let newimage = info[UIImagePickerControllerOriginalImage] as? UIImage
-                myvariables.userperfil.ActualizarPhoto(newphoto: newimage!)
-                self.userPerfilPhoto.image = newimage
+                //let newimage = info[UIImagePickerControllerOriginalImage] as? UIImage
+              
+                    let photoPreview = info[UIImagePickerControllerOriginalImage] as? UIImage
+                    myvariables.userperfil.ActualizarPhoto(newphoto: photoPreview!)
+                    self.userPerfilPhoto.image = photoPreview
+                    /*
+                     let imagenURL = self.saveImageToFile(photoPreview!)
+                     
+                     let image: CIImage = CIImage(contentsOf: imagenURL)!
+                     
+                     let accuracy: [String: AnyObject] = [CIDetectorAccuracy: CIDetectorAccuracyHigh as AnyObject]
+                    let faceDetector: CIDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: accuracy)!
+               
+                    let faces = faceDetector.features(in: image) as! [CIFaceFeature]
+                    print("faces \(faces)")
+                    if faces.count > 0{
+                        myvariables.userperfil.ActualizarPhoto(newphoto: photoPreview!)
+                        self.userPerfilPhoto.image = photoPreview
+                    }else{
+                        let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Wrong Camara"), message: NSLocalizedString("The profile only accepts selfies photo. Please, make sure that your face is completely visible.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+                        
+                        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a picture again", comment:"Yes"), style: UIAlertActionStyle.default, handler: {alerAction in
+                            self.camaraController.sourceType = .camera
+                            self.camaraController.cameraCaptureMode = .photo
+                            self.camaraController.cameraDevice = .front
+                            self.present(self.camaraController, animated: true, completion: nil)
+                        }))
+                        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertActionStyle.destructive, handler: { action in
+                        }))
+                        self.present(EditPhoto, animated: true, completion: nil)
+                    }*/
+                    
+                //myvariables.userperfil.ActualizarPhoto(newphoto: newimage!)
+                //self.userPerfilPhoto.image = newimage
+                    
                 }else{
                     self.camaraController.dismiss(animated: true, completion: nil)
                     let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("The profile only accepts selfies photo.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
@@ -88,9 +119,26 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
                 }
             }
         }
-
     }
 
+    
+    //RENDER IMAGEN
+    func saveImageToFile(_ image: UIImage) -> URL
+    {
+        let filemgr = FileManager.default
+        
+        let dirPaths = filemgr.urls(for: .documentDirectory,
+                                    in: .userDomainMask)
+        
+        let fileURL = dirPaths[0].appendingPathComponent(image.description)
+        
+        if let renderedJPEGData =
+            UIImageJPEGRepresentation(image, 0.5) {
+            try! renderedJPEGData.write(to: fileURL)
+        }
+        
+        return fileURL
+    }
 
     @IBAction func EditPhoto(_ sender: Any) {
         self.camaraController.sourceType = .camera
@@ -112,11 +160,10 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     }
     
     @IBAction func SignOut(_ sender: Any) {
-        myvariables.userperfil.ActualizarConectado(estado: "0")
-        sleep(2)
+        FBSDKAccessToken.setCurrent(nil)
+        FBSDKProfile.setCurrent(nil)
         FBSDKLoginManager().logOut()
-        GIDSignIn.sharedInstance().signOut()
-        GIDSignIn.sharedInstance().disconnect()
+        myvariables.userperfil.ActualizarConectado(estado: "0")
     }
     
 

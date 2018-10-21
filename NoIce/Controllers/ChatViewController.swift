@@ -47,7 +47,20 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         //Descomentar, si el tap no debe interferir o cancelar otras acciones
         //tap.cancelsTouchesInView = false
         
-        view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(self.tap)
+        
+        //Tab bar User Photo
+        let navController = navigationController!
+        let bannerHeight = navController.navigationBar.frame.size.height
+        let logoContainer = UIView(frame: CGRect(x: 0, y: 1, width: bannerHeight-2, height: bannerHeight-2))
+        
+        let imageView = UIImageView(image: image)
+        imageView.frame = CGRect(x: 0, y: 0, width: bannerHeight-2, height: bannerHeight-2)
+        imageView.layer.cornerRadius = bannerHeight / 6
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        logoContainer.addSubview(imageView)
+        navigationItem.titleView = logoContainer
         
     }
     
@@ -72,7 +85,8 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         if message.senderId == self.senderId {
             return bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
         } else {
-            return bubbleFactory?.incomingMessagesBubbleImage(with: UIColor(red: 141/255, green: 168/255, blue: 217/255, alpha: 1))
+            return bubbleFactory?.incomingMessagesBubbleImage(with: UIColor(red: 102/255, green: 153/255, blue: 255/255, alpha: 1))
+            //Blue color  red: 141/255, green: 168/255, blue: 217/255, alpha: 1
         }
          
     }
@@ -140,11 +154,11 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     
     //FUNCTION TO SEARCH NEW MESSAGES
     func BuscarNewMSG() {
-        let predicateMesajes = NSPredicate(format: "destinoEmail == %@ and emisorEmail == %@", myvariables.userperfil.Email, myvariables.usuariosMostrar[chatOpenPos].Email)
+        let predicateMesajes = NSPredicate(format: "destinoEmail == %@ and emisorEmail == %@", myvariables.userperfil.Email, myvariables.usuariosMostrar[self.chatOpenPos].Email)
         
-        let queryKapsuleVista = CKQuery(recordType: "CMensaje",predicate: predicateMesajes)
-        queryKapsuleVista.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        self.MSGContainer.publicCloudDatabase.perform(queryKapsuleVista, inZoneWith: nil, completionHandler: ({results, error in
+        let queryVista = CKQuery(recordType: "CMensaje",predicate: predicateMesajes)
+        queryVista.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        self.MSGContainer.publicCloudDatabase.perform(queryVista, inZoneWith: nil, completionHandler: ({results, error in
             if (error == nil) {
                 
                 if (results?.count)! > 0{
@@ -171,7 +185,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
                 self.MSGTimer.invalidate()
                 myvariables.usuariosMostrar.remove(at: self.chatOpenPos)
                 DispatchQueue.main.async {
-                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! ViewController
+                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
                     self.navigationController?.show(vc, sender: nil)
                 }
             }

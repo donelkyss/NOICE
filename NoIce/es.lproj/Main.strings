@@ -3,16 +3,22 @@
 "24q-gZ-uk4.title" = "Perfil";
 
 /* Class = "UINavigationItem"; title = "People Connected"; ObjectID = "33x-rW-vJr"; */
-"33x-rW-vJr.title" = "Usuarios conectados";
+"33x-rW-vJr.title" = "Conectados";
 
 /* Class = "UIButton"; normalTitle = "Block"; ObjectID = "3du-25-7WB"; */
 "3du-25-7WB.normalTitle" = "Bloquear";
 
-/* Class = "UILabel"; text = "or"; ObjectID = "43g-1T-TGf"; */
-"43g-1T-TGf.text" = "o";
+/* Class = "UIViewController"; title = "Users Connected"; ObjectID = "604-uc-BfE"; */
+"604-uc-BfE.title" = "Conectados";
+
+/* Class = "UIButton"; normalTitle = "Share"; ObjectID = "8Pl-s7-Tq1"; */
+"8Pl-s7-Tq1.normalTitle" = "Compartir";
+
+/* Class = "UINavigationController"; title = "Menu"; ObjectID = "As4-gg-j3c"; */
+"As4-gg-j3c.title" = "Menu";
 
 /* Class = "UITableViewController"; title = "People Connected"; ObjectID = "BOH-5g-gzf"; */
-"BOH-5g-gzf.title" = "Usuarios conectados";
+"BOH-5g-gzf.title" = "Conectados";
 
 /* Class = "UIViewController"; title = "Searching"; ObjectID = "BYZ-38-t0r"; */
 "BYZ-38-t0r.title" = "Buscando...";
@@ -20,31 +26,56 @@
 /* Class = "UINavigationItem"; title = "Chat"; ObjectID = "Cex-bi-2Nj"; */
 "Cex-bi-2Nj.title" = "Chat";
 
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "KgR-iF-lSv"; */
+"KgR-iF-lSv.title" = "Item";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "MOM-Zm-vRS"; */
+"MOM-Zm-vRS.title" = "Item";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "Mfn-S2-tup"; */
+"Mfn-S2-tup.title" = "Item";
+
 /* Class = "UIViewController"; title = "Chat"; ObjectID = "PDV-YC-gDC"; */
 "PDV-YC-gDC.title" = "Chat";
 
+/* Class = "UINavigationItem"; title = "Users Connected"; ObjectID = "Pk9-lh-Sjn"; */
+"Pk9-lh-Sjn.title" = "Conectados";
+
 /* Class = "UIButton"; normalTitle = "Edit Photo"; ObjectID = "QKO-Qk-2Os"; */
-"QKO-Qk-2Os.normalTitle" = "Editar foto";
+"QKO-Qk-2Os.normalTitle" = "Editar Foto";
 
 /* Class = "UILabel"; text = "Loading"; ObjectID = "QXc-Ia-tA2"; */
 "QXc-Ia-tA2.text" = "Cargando...";
 
+/* Class = "UINavigationItem"; title = "Menu"; ObjectID = "UM9-Ys-bX5"; */
+"UM9-Ys-bX5.title" = "Menu";
+
 /* Class = "UILabel"; text = "Login with:"; ObjectID = "bsX-NZ-1qv"; */
-"bsX-NZ-1qv.text" = "Login con:";
+"bsX-NZ-1qv.text" = "Login with:";
 
 /* Class = "UIViewController"; title = "Login"; ObjectID = "fdm-NI-ohw"; */
 "fdm-NI-ohw.title" = "Login";
 
-/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "kz2-T2-GMx"; */
-"kz2-T2-GMx.title" = "Item";
+/* Class = "UIBarButtonItem"; title = "users"; ObjectID = "kz2-T2-GMx"; */
+"kz2-T2-GMx.title" = "usuarios";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "lht-rd-lsI"; */
+"lht-rd-lsI.title" = "Item";
+
+/* Class = "UINavigationController"; title = "Users Connected"; ObjectID = "mVM-3K-jxs"; */
+"mVM-3K-jxs.title" = "Conectados";
 
 /* Class = "UIButton"; normalTitle = "Sign Out"; ObjectID = "nZq-Jq-L0F"; */
-"nZq-Jq-L0F.normalTitle" = "Cerrar sesión";
+"nZq-Jq-L0F.normalTitle" = "Cerrar Sesion";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "qcW-q7-Ojn"; */
+"qcW-q7-Ojn.title" = "Item";
 
 /* Class = "UIButton"; normalTitle = "Button"; ObjectID = "vTk-yA-XYp"; */
 "vTk-yA-XYp.normalTitle" = "Button";
 
 /* Class = "UILabel"; text = "Searching people"; ObjectID = "vWt-E2-web"; */
-"vWt-E2-web.text" = "Buscando usuarios";
+"vWt-E2-web.text" = "Buscando Usuarios...";
 
-"8Pl-s7-Tq1.normalTitle" = "Compartir";
+/* Class = "UITextView"; text = "Click photo to chat or Slide it to hide and block."; ObjectID = "Eal-HZ-VB9"; */
+"Eal-HZ-VB9.text" = "Click sobre la foto para chatear o desplaza para ocultar y bloquear.";

@@ -14,7 +14,6 @@
 		B56EBD581E4629BF003C85D8 /* CMensaje.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56EBD571E4629BF003C85D8 /* CMensaje.swift */; };
 		B56F409A1EB101EE00DA8A8E /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56F40991EB101EE00DA8A8E /* ProfileController.swift */; };
 		B57B4EB71E50F5F6003FAF01 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B57B4EB51E50F5F6003FAF01 /* Main.storyboard */; };
-		B58668291E60BEBB00D463A4 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58668281E60BEBB00D463A4 /* UserViewController.swift */; };
 		B586682E1E610E3500D463A4 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B586682C1E610E3500D463A4 /* UserTableViewCell.swift */; };
 		B58798601EC8B579008D8073 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B587985F1EC8B579008D8073 /* ChatViewController.swift */; };
 		B58798691EC8B8E8008D8073 /* JSQMessagesViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B58798681EC8B8E8008D8073 /* JSQMessagesViewController.framework */; };
@@ -32,12 +31,13 @@
 		B5D9DB291F4F892E009955B9 /* UIViewXRadialGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9DB1F1F4F892E009955B9 /* UIViewXRadialGradient.swift */; };
 		B5D9DB2A1F4F892E009955B9 /* UIVisualEffectViewX.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9DB201F4F892E009955B9 /* UIVisualEffectViewX.swift */; };
 		B5DCAE5C1E292770000C1325 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE5B1E292770000C1325 /* AppDelegate.swift */; };
-		B5DCAE5E1E292770000C1325 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE5D1E292770000C1325 /* ViewController.swift */; };
+		B5DCAE5E1E292770000C1325 /* InicioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE5D1E292770000C1325 /* InicioController.swift */; };
 		B5DCAE641E292771000C1325 /* NoIce.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE621E292770000C1325 /* NoIce.xcdatamodeld */; };
 		B5DCAE691E292771000C1325 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5DCAE671E292771000C1325 /* LaunchScreen.storyboard */; };
 		B5DCAE741E292771000C1325 /* NoIceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE731E292771000C1325 /* NoIceTests.swift */; };
 		B5DCAE7F1E292771000C1325 /* NoIceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE7E1E292771000C1325 /* NoIceUITests.swift */; };
 		B5DCAE911E2A8D49000C1325 /* CUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DCAE901E2A8D49000C1325 /* CUser.swift */; };
+		C6170EA3217BFCB900BAB4E1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C6170EA5217BFCB900BAB4E1 /* InfoPlist.strings */; };
 		C6B437E2216F1242001F545F /* UsersConnected.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B437E1216F1242001F545F /* UsersConnected.swift */; };
 		C6B437E4216F9A7C001F545F /* UserCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B437E3216F9A7C001F545F /* UserCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -68,8 +68,6 @@
 		B56EBD571E4629BF003C85D8 /* CMensaje.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMensaje.swift; sourceTree = "<group>"; };
 		B56F40991EB101EE00DA8A8E /* ProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProfileController.swift; path = Controllers/ProfileController.swift; sourceTree = "<group>"; };
 		B57B4EB61E50F5F6003FAF01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B57BBFB11F5385EE00D67003 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
-		B58668281E60BEBB00D463A4 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserViewController.swift; path = Controllers/UserViewController.swift; sourceTree = "<group>"; };
 		B586682C1E610E3500D463A4 /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserTableViewCell.swift; path = Views/UserTableViewCell.swift; sourceTree = "<group>"; };
 		B587985F1EC8B579008D8073 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = Controllers/ChatViewController.swift; sourceTree = "<group>"; };
 		B58798611EC8B672008D8073 /* Pods_NoIce.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_NoIce.framework; path = "Pods/../build/Release-iphoneos/Pods_NoIce.framework"; sourceTree = "<group>"; };
@@ -93,11 +91,10 @@
 		B5D9DB201F4F892E009955B9 /* UIVisualEffectViewX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIVisualEffectViewX.swift; sourceTree = "<group>"; };
 		B5DCAE581E292770000C1325 /* NoIce.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoIce.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5DCAE5B1E292770000C1325 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B5DCAE5D1E292770000C1325 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B5DCAE5D1E292770000C1325 /* InicioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InicioController.swift; sourceTree = "<group>"; };
 		B5DCAE631E292770000C1325 /* NoIce.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NoIce.xcdatamodel; sourceTree = "<group>"; };
 		B5DCAE651E292771000C1325 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B5DCAE681E292771000C1325 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B5DCAE6A1E292771000C1325 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5DCAE6F1E292771000C1325 /* NoIceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoIceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5DCAE731E292771000C1325 /* NoIceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoIceTests.swift; sourceTree = "<group>"; };
 		B5DCAE751E292771000C1325 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,8 +104,12 @@
 		B5DCAE8C1E293CC6000C1325 /* Pods_NoIce.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_NoIce.framework; path = "../../../../../Users/dsantana/Library/Developer/Xcode/DerivedData/NoIce-ckyddqztfylhtfgchfkibaxtrjvd/Build/Products/Debug-iphonesimulator/Pods_NoIce.framework"; sourceTree = "<group>"; };
 		B5DCAE901E2A8D49000C1325 /* CUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CUser.swift; sourceTree = "<group>"; };
 		C54835704C69F3ADD43B0445 /* Pods_NoIce.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NoIce.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6170EA2217BFC7000BAB4E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C6170EA4217BFCB900BAB4E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C6170EA6217BFCD000BAB4E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C6B437E1216F1242001F545F /* UsersConnected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersConnected.swift; sourceTree = "<group>"; };
 		C6B437E3216F9A7C001F545F /* UserCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionViewCell.swift; sourceTree = "<group>"; };
+		C6C3F45E2174126500ABFCCC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		FF11C155B493ADC191566ED0 /* Pods-NoIce.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoIce.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoIce/Pods-NoIce.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,11 +144,10 @@
 		B57B4EB81E50F993003FAF01 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B58668281E60BEBB00D463A4 /* UserViewController.swift */,
 				B564C41A1EAA501700FABEAB /* LoginController.swift */,
 				B56F40991EB101EE00DA8A8E /* ProfileController.swift */,
 				B587985F1EC8B579008D8073 /* ChatViewController.swift */,
-				B5DCAE5D1E292770000C1325 /* ViewController.swift */,
+				B5DCAE5D1E292770000C1325 /* InicioController.swift */,
 				C6B437E1216F1242001F545F /* UsersConnected.swift */,
 				C6B437E3216F9A7C001F545F /* UserCollectionViewCell.swift */,
 			);
@@ -183,6 +183,7 @@
 		B5DCAE4F1E292770000C1325 = {
 			isa = PBXGroup;
 			children = (
+				C6170EA5217BFCB900BAB4E1 /* InfoPlist.strings */,
 				AF73D1E3200F07B300886627 /* Localizable.strings */,
 				B5DCAE5A1E292770000C1325 /* NoIce */,
 				B5DCAE721E292771000C1325 /* NoIceTests */,
@@ -215,7 +216,7 @@
 				B5DCAE5B1E292770000C1325 /* AppDelegate.swift */,
 				B5DCAE651E292771000C1325 /* Assets.xcassets */,
 				B5DCAE671E292771000C1325 /* LaunchScreen.storyboard */,
-				B5DCAE6A1E292771000C1325 /* Info.plist */,
+				C6170EA2217BFC7000BAB4E1 /* Info.plist */,
 				B5DCAE621E292770000C1325 /* NoIce.xcdatamodeld */,
 				B5DCAE901E2A8D49000C1325 /* CUser.swift */,
 				B56EBD571E4629BF003C85D8 /* CMensaje.swift */,
@@ -276,7 +277,6 @@
 				B5DCAE551E292770000C1325 /* Frameworks */,
 				B5DCAE561E292770000C1325 /* Resources */,
 				BA431880541A32A75F2CC6B7 /* [CP] Embed Pods Frameworks */,
-				DD4104B0C241E988557598ED /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -393,6 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5DCAE691E292771000C1325 /* LaunchScreen.storyboard in Resources */,
+				C6170EA3217BFCB900BAB4E1 /* InfoPlist.strings in Resources */,
 				AF73D1E1200F07B300886627 /* Localizable.strings in Resources */,
 				AF316D0F1F92A6A900F74FE6 /* user.png in Resources */,
 				B5D767F81EDB6915000C5239 /* UserTableViewCell.xib in Resources */,
@@ -447,9 +448,6 @@
 				"${BUILT_PRODUCTS_DIR}/Canvas/Canvas.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/JSQMessagesViewController/JSQMessagesViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework",
 			);
@@ -459,33 +457,12 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Canvas.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQMessagesViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQSystemSoundPlayer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NoIce/Pods-NoIce-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DD4104B0C241E988557598ED /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NoIce/Pods-NoIce-resources.sh",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NoIce/Pods-NoIce-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -501,9 +478,8 @@
 				B586682E1E610E3500D463A4 /* UserTableViewCell.swift in Sources */,
 				B5D9DB211F4F892E009955B9 /* UIButtonX.swift in Sources */,
 				B5D9DB251F4F892E009955B9 /* UITextFieldX.swift in Sources */,
-				B5DCAE5E1E292770000C1325 /* ViewController.swift in Sources */,
+				B5DCAE5E1E292770000C1325 /* InicioController.swift in Sources */,
 				C6B437E2216F1242001F545F /* UsersConnected.swift in Sources */,
-				B58668291E60BEBB00D463A4 /* UserViewController.swift in Sources */,
 				B5D9DB291F4F892E009955B9 /* UIViewXRadialGradient.swift in Sources */,
 				C6B437E4216F9A7C001F545F /* UserCollectionViewCell.swift in Sources */,
 				B5D9DB241F4F892E009955B9 /* UISliderX.swift in Sources */,
@@ -565,7 +541,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B57B4EB61E50F5F6003FAF01 /* Base */,
-				B57BBFB11F5385EE00D67003 /* es */,
+				C6C3F45E2174126500ABFCCC /* es */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -587,6 +563,15 @@
 				B5D767F71EDB653D000C5239 /* es */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		C6170EA5217BFCB900BAB4E1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C6170EA4217BFCB900BAB4E1 /* es */,
+				C6170EA6217BFCD000BAB4E1 /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

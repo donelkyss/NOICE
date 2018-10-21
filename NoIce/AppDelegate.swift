@@ -8,8 +8,6 @@
 
 import UIKit
 import CoreData
-import GGLSignIn
-import GoogleSignIn
 import CloudKit
 import FBSDKLoginKit
 
@@ -24,7 +22,7 @@ struct myvariables {
 }
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSignInUIDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var Appcontainer = CKContainer.default()
@@ -38,11 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
         application.isIdleTimerDisabled = true
         //GMSServices.provideAPIKey("AIzaSyBnKURUhbBUr74PbpPgtPA1driuRaTShGo")
         // Override point for customization after application launch.
-        GIDSignIn.sharedInstance().delegate = self
         
         //FBSDKApplicationDelegate.sharedInstance().application( application, didFinishLaunchingWithOptions: launchOptions)
-        GIDSignIn.sharedInstance().clientID = "319723960699-96388hc84tnoohlatvb8r7rhm2806br1.apps.googleusercontent.com"
-        GIDSignIn.sharedInstance().signInSilently()
         //return true
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -57,8 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
             }else{
                 if myvariables.userperfil != nil{
                     myvariables.userperfil.ActualizarConectado(estado: "0")
-                    sleep(2)
-                    exit(0)
                 }
             }
         }
@@ -73,25 +66,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
         }
     }
     
-    func application(_ application: UIApplication,
-                     open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        
-        
-        let googleLogin = GIDSignIn.sharedInstance().handle(url as URL!,sourceApplication: sourceApplication,annotation: annotation)
-        let faceLogin = FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
-        
-        return googleLogin || faceLogin
-    }
-    
-    private func application(app: UIApplication, openURL url: URL, options: [String : AnyObject]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url as URL!,
-                                                 sourceApplication: options.index(forKey: "UIApplicationOpenURLOptionsSourceApplicationKey") as! String?,
-                                                 annotation: options.index(forKey: "UIApplicationOpenURLOptionsAnnotationKey"))
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        if FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation) {
+            return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
+        } else {
+            print("errororrr")
+            return false
+        }
+        //return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        
-       // FBSDKAppEvents.activateApp()
+       FBSDKAppEvents.activateApp()
         /*if myvariables.userperfil != nil{
             myvariables.userperfil.ActualizarConectado(estado: "0")
             sleep(2)
@@ -99,6 +85,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
 
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+    }
+    
+    func applicationDidBecomeActive(application: UIApplication) {
+        FBSDKAppEvents.activateApp()
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -119,9 +109,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
                 print("Error resetting badge: \(String(describing: error))")
             }
             else {
-                application.applicationIconBadgeNumber = 0
+                
             }
         }
+        application.applicationIconBadgeNumber = 0
         CKContainer.default().add(badgeResetOperation)
 
     }
@@ -144,15 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, GIDSig
             myvariables.userperfil.ActualizarConectado(estado: "0")
             sleep(2)
         }
-    }
-    
-    // Finished disconnecting |user| from the app successfully if |error| is |nil|.
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!){
-        
-    }
-    
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        
     }
 
 }

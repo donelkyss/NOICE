@@ -29,6 +29,7 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>flex</string>
 				<string>fb1438673499558995</string>
 			</array>
 		</dict>
@@ -58,7 +59,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>FacebookAppID</key>
 	<string>1438673499558995</string>
 	<key>FacebookDisplayName</key>
@@ -72,9 +73,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>The app require acces to the camera to take user perfil photo.</string>
+	<string>The app requires acces to the camera to take user perfil photo.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>The app need to acces your Location to search the people closer to your position.</string>
+	<string>The app needs to acces your Location to search people closer to your position.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>userphoto</string>
 	<key>UILaunchStoryboardName</key>

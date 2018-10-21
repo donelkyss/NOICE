@@ -8,7 +8,7 @@
 
 "No user connected" = "No hay ususarios conectados";
 
-"There aren't any user connected near you." = "No hay ningún ususario conectado cerca de usted.";
+"There aren't any user connected near you." = "No hay usuarios conectados cerca de usted.";
 
 "Close" = "Cerrar";
 
@@ -35,3 +35,13 @@
 "Terms of Use" = "Política de uso";
 
 "To use this application is required you are older than 14 years old." = "Para usar esta aplicación es necesario tener más de 14 años de edad.";
+
+"Location Error" = "Error de Localización";
+
+" searches the users closer to your position. Please go to Settings, active the Location services and open " = " busca usuarios conectados cerca de su posición. Por favor, active el servicio de localización en Ajustes y vuelva a abrir ";
+
+"Settings" = "Ajustes";
+
+" again." = ".";
+
+"Click photo to chat or Slide it to hide and block." = "Click sobre la foto para chatear o desplaza para ocultar y bloquear.";

@@ -23,7 +23,7 @@ class UserViewController: UITableViewController {
         //self.BuscarUsuariosConectados()
 
         if myvariables.usuariosMostrar.count == 0{
-            let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! ViewController
+            let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
             self.navigationController?.show(vc, sender: nil)
         }else{
             connectedTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(BuscarUsuariosConectados), userInfo: nil, repeats: true)
@@ -101,6 +101,15 @@ class UserViewController: UITableViewController {
                     var bloqueados = [String]()
                     var i = 0
                     while i < (results?.count)!{
+                        bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
+                        if  !bloqueados.contains(myvariables.userperfil.Email) && !myvariables.userperfil.bloqueados.contains(results?[i].value(forKey: "email") as! String){
+                            let usuarioTemp = CUser(user: results![i])
+                            usuarioTemp.BuscarNuevosMSG(EmailDestino: myvariables.userperfil.Email)
+                            myvariables.usuariosMostrar.append(usuarioTemp)
+                        }
+                        i += 1
+                    }
+                   /* while i < (results?.count)!{
                         let usuarioTemp = CUser(nombreapellidos: results?[i].value(forKey: "nombreApellidos") as! String, email: results?[i].value(forKey: "email") as! String)
                         usuarioTemp.BuscarNuevosMSG(EmailDestino: myvariables.userperfil.Email)
                         bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
@@ -114,7 +123,7 @@ class UserViewController: UITableViewController {
                             myvariables.usuariosMostrar.append(usuarioTemp)
                         }
                         i += 1
-                    }
+                    }*/
                 }else{
                     self.connectedTimer.invalidate()
                     let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No hay usuarios conectados"), preferredStyle: UIAlertControllerStyle.alert)
