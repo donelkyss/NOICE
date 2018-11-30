@@ -60,9 +60,12 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     }
     
        
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         
-        let mediaType = info[UIImagePickerControllerMediaType] as! NSString
+        let mediaType = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.mediaType)] as! NSString
         if let type:AnyObject = mediaType {
             if type is String {
                 if camaraController.cameraDevice == .front{
@@ -70,7 +73,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
                 self.camaraController.dismiss(animated: true, completion: nil)
                 //let newimage = info[UIImagePickerControllerOriginalImage] as? UIImage
               
-                    let photoPreview = info[UIImagePickerControllerOriginalImage] as? UIImage
+                    let photoPreview = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
                     myvariables.userperfil.ActualizarPhoto(newphoto: photoPreview!)
                     self.userPerfilPhoto.image = photoPreview
                     /*
@@ -105,15 +108,15 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
                     
                 }else{
                     self.camaraController.dismiss(animated: true, completion: nil)
-                    let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("The profile only accepts selfies photo.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+                    let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("The profile only accepts selfies photo.", comment:""), preferredStyle: UIAlertController.Style.alert)
                     
-                    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a picture again", comment:"Yes"), style: UIAlertActionStyle.default, handler: {alerAction in
+                    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a picture again", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
                         self.camaraController.sourceType = .camera
                         self.camaraController.cameraCaptureMode = .photo
                         self.camaraController.cameraDevice = .front
                         self.present(self.camaraController, animated: true, completion: nil)
                     }))
-                    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertActionStyle.destructive, handler: { action in
+                    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
                     }))
                     self.present(EditPhoto, animated: true, completion: nil)
                 }
@@ -133,7 +136,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
         let fileURL = dirPaths[0].appendingPathComponent(image.description)
         
         if let renderedJPEGData =
-            UIImageJPEGRepresentation(image, 0.5) {
+            image.jpegData(compressionQuality: 0.5) {
             try! renderedJPEGData.write(to: fileURL)
         }
         
@@ -167,4 +170,14 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     }
     
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

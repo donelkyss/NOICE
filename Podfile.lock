@@ -6,9 +6,22 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
   - Canvas (0.1.2)
-  - FBSDKCoreKit (4.23.0):
-    - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.23.0):
+  - FacebookSDK (4.38.0):
+    - Bolts (~> 1.9)
+    - FacebookSDK/CoreKit (= 4.38.0)
+    - FacebookSDK/MarketingKit (= 4.38.0)
+  - FacebookSDK/CoreKit (4.38.0):
+    - Bolts (~> 1.9)
+    - FBSDKCoreKit
+  - FacebookSDK/MarketingKit (4.38.0):
+    - Bolts (~> 1.9)
+    - FacebookSDK/CoreKit
+    - FBSDKMarketingKit
+  - FBSDKCoreKit (4.38.1):
+    - Bolts (~> 1.9)
+  - FBSDKLoginKit (4.38.1):
+    - FBSDKCoreKit
+  - FBSDKMarketingKit (4.38.0):
     - FBSDKCoreKit
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -16,6 +29,7 @@ PODS:
 
 DEPENDENCIES:
   - Canvas
+  - FacebookSDK
   - FBSDKCoreKit
   - FBSDKLoginKit
   - JSQMessagesViewController
@@ -24,19 +38,23 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Bolts
     - Canvas
+    - FacebookSDK
     - FBSDKCoreKit
     - FBSDKLoginKit
+    - FBSDKMarketingKit
     - JSQMessagesViewController
     - JSQSystemSoundPlayer
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   Canvas: eb861e3b555d032648146c8ffda1a5dea40059ca
-  FBSDKCoreKit: d7829f5a69901cd7296105328e4c3c3fc7da6518
-  FBSDKLoginKit: 6b92bd65f319d669d2b0730e49db495ef1660566
+  FacebookSDK: 73f54b8b94e09b05647cdef0af147f470cd3edc6
+  FBSDKCoreKit: 8d47857400e2f5bdea697a80daff882e91c84ef6
+  FBSDKLoginKit: 4621c690d9dd8628031a4791497062183ea34b0d
+  FBSDKMarketingKit: e609f39d74ab273cf52e2f8b7e8829ed412b2827
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
 
-PODFILE CHECKSUM: 06d046f401afb72a5bca5888f08963d3fbd41d4b
+PODFILE CHECKSUM: 4ca4d538c12374d1accab2173a95301dfd355392
 
 COCOAPODS: 1.6.0.beta.1

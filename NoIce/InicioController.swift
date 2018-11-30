@@ -47,12 +47,12 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
                 let locationAlert = UIAlertController (title: NSLocalizedString("Location Error", comment: ""), message: (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" searches the users closer to your position. Please go to Settings, active the Location services and open ", comment: "") + (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" again.", comment: ""), preferredStyle: .alert)
                 locationAlert.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: ""), style: .default, handler: {alerAction in
                     if #available(iOS 10.0, *) {
-                        let settingsURL = URL(string: UIApplicationOpenSettingsURLString)!
-                        UIApplication.shared.open(settingsURL, options: [:], completionHandler: { success in
+                        let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+                        UIApplication.shared.open(settingsURL, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
                             exit(0)
                         })
                     } else {
-                        if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                        if let url = NSURL(string:UIApplication.openSettingsURLString) {
                             UIApplication.shared.openURL(url as URL)
                             exit(0)
                         }
@@ -112,15 +112,13 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
         if estado == 1{
             self.userTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(BuscarUsuariosConectados), userInfo: nil, repeats: true)
         }else{
-           
             self.userTimer.invalidate()
-
         }
     }
 
     //MARK: - BUSCAR USUARIOS CONECTADOS
     //MEJORAR ESTA FUNCION CAMBIAR EL CICLO FOR:
-    func BuscarUsuariosConectados(){
+    @objc func BuscarUsuariosConectados(){
         if myvariables.userperfil.Posicion != myvariables.currentPosition {
             let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(posicion, %@) < 300 and conectado == %@ and email != %@", myvariables.userperfil.Posicion, "1", myvariables.userperfil.Email)
             self.TimerStart(estado: 0)
@@ -140,10 +138,17 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
                             }
                             i += 1
                         }
+                    }
+                    
+                    if myvariables.usuariosMostrar.count > 0{
+                        DispatchQueue.main.async {
+                            let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "UsersConnected") as! UsersConnected
+                            self.navigationController?.show(vc, sender: nil)
+                        }
                     }else{
                         self.locationManager.stopUpdatingLocation()
-                        let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No user connected"), preferredStyle: UIAlertControllerStyle.alert)
-                        alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertActionStyle.default, handler: {alerAction in
+                        let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
+                        alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertAction.Style.default, handler: {alerAction in
                                 let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ProfileView") as! ProfileController
                                 self.navigationController?.show(vc, sender: nil)
                         }))
@@ -151,10 +156,6 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
                     }
                 }else{
                     print("ERROR DE CONSULTA " + error.debugDescription)
-                }
-                DispatchQueue.main.async {
-                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "UsersConnected") as! UsersConnected
-                    self.navigationController?.show(vc, sender: nil)
                 }
             }))
         }
@@ -168,3 +169,8 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
 
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+}

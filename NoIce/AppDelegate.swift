@@ -27,11 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var Appcontainer = CKContainer.default()
     
-    var backgrounTaskIdentifier: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var backgrounTaskIdentifier: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
     var myTimer: Timer?
     var BackgroundSeconds = 0
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         //Avoid lock screen when app is open
         application.isIdleTimerDisabled = true
         //GMSServices.provideAPIKey("AIzaSyBnKURUhbBUr74PbpPgtPA1driuRaTShGo")
@@ -61,8 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let timer = self.myTimer{
             timer.invalidate()
             self.myTimer = nil
-            UIApplication.shared.endBackgroundTask(self.backgrounTaskIdentifier)
-            self.backgrounTaskIdentifier = UIBackgroundTaskInvalid
+            UIApplication.shared.endBackgroundTask(convertToUIBackgroundTaskIdentifier(self.backgrounTaskIdentifier.rawValue))
+            self.backgrounTaskIdentifier = UIBackgroundTaskIdentifier.invalid
         }
     }
     
@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        if backgrounTaskIdentifier != UIBackgroundTaskInvalid{
+        if backgrounTaskIdentifier != UIBackgroundTaskIdentifier.invalid{
             endBackgroundTask()
         }
         let badgeResetOperation = CKModifyBadgeOperation(badgeValue: 0)
@@ -141,3 +141,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIBackgroundTaskIdentifier(_ input: Int) -> UIBackgroundTaskIdentifier {
+	return UIBackgroundTaskIdentifier(rawValue: input)
+}

@@ -38,7 +38,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         let image = myvariables.usuariosMostrar[self.chatOpenPos].FotoPerfil
         let imgBackground:UIImageView = UIImageView(frame: self.view.bounds)
         imgBackground.image = image
-        imgBackground.contentMode = UIViewContentMode.scaleAspectFill
+        imgBackground.contentMode = UIView.ContentMode.scaleAspectFill
         imgBackground.clipsToBounds = true
         self.collectionView?.backgroundView = imgBackground
         
@@ -138,7 +138,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     }
     
     // END COLLECTION VIEW FUNCTIONS
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         //Las vistas y toda la jerarquía renuncia a responder, para esconder el teclado
         view.endEditing(true)
     }
@@ -153,7 +153,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     }
     
     //FUNCTION TO SEARCH NEW MESSAGES
-    func BuscarNewMSG() {
+    @objc func BuscarNewMSG() {
         let predicateMesajes = NSPredicate(format: "destinoEmail == %@ and emisorEmail == %@", myvariables.userperfil.Email, myvariables.usuariosMostrar[self.chatOpenPos].Email)
         
         let queryVista = CKQuery(recordType: "CMensaje",predicate: predicateMesajes)
@@ -192,7 +192,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         }
     }
    
-    func EliminarMSGRead(record : CKRecordID) {
+    func EliminarMSGRead(record : CKRecord.ID) {
         self.MSGContainer.publicCloudDatabase.delete(withRecordID: record, completionHandler: {results, error in
             if error == nil{
 
@@ -214,7 +214,7 @@ extension JSQMessagesInputToolbar {
         guard let window = window else { return }
         if #available(iOS 11.0, *) {
             let anchor = window.safeAreaLayoutGuide.bottomAnchor
-            bottomAnchor.constraintLessThanOrEqualToSystemSpacingBelow(anchor, multiplier: 1.0).isActive = true
+            bottomAnchor.constraint(lessThanOrEqualToSystemSpacingBelow: anchor, multiplier: 1.0).isActive = true
         }
     }
 }

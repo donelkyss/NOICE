@@ -29,10 +29,10 @@ class UserCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelegate{
         self.addGestureRecognizer(pan)
     }
     
-    func onPan(_ pan: UIPanGestureRecognizer) {
-        if pan.state == UIGestureRecognizerState.began {
+    @objc func onPan(_ pan: UIPanGestureRecognizer) {
+        if pan.state == UIGestureRecognizer.State.began {
          
-        } else if pan.state == UIGestureRecognizerState.changed {
+        } else if pan.state == UIGestureRecognizer.State.changed {
       
         } else {
             if abs(pan.velocity(in: self).x) > 500 {

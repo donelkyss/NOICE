@@ -22,15 +22,13 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var helpTextView: UITextView!
     
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.delegate = self
         self.collectionView.reloadSections(IndexSet(integer: 0))
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.hiddeTextView))
+        tapGesture.cancelsTouchesInView = false
         tapGesture.delegate = self
         self.collectionView.addGestureRecognizer(tapGesture)
         
@@ -49,7 +47,7 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     //CUSTOM FUNCTIONS
-    func BuscarUsuariosConectados(){
+    @objc func BuscarUsuariosConectados(){
         
         let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(posicion, %@) < 300 and conectado == %@ and email != %@", myvariables.userperfil.Posicion, "1", myvariables.userperfil.Email)
         
@@ -72,8 +70,8 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
                     }
                 }else{
                     self.connectedTimer.invalidate()
-                    let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No hay usuarios conectados"), preferredStyle: UIAlertControllerStyle.alert)
-                    alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertActionStyle.default, handler: {alerAction in
+                    let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No hay usuarios conectados"), preferredStyle: UIAlertController.Style.alert)
+                    alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertAction.Style.default, handler: {alerAction in
                         let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ProfileView") as! ProfileController
                         self.navigationController?.show(vc, sender: nil)
                     }))
@@ -88,7 +86,7 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    func hiddeTextView(sender: UITapGestureRecognizer){
+    @objc func hiddeTextView(sender: UITapGestureRecognizer){
         self.helpView.isHidden = true
     }
     

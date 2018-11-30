@@ -22,7 +22,7 @@ class CUser{
     var conectado: String!
     var NewMsg: Bool!
     var bloqueados: [String]!
-    var recordID: CKRecordID!
+    var recordID: CKRecord.ID!
     
     //Métodos
     init(user: CKRecord){
@@ -206,7 +206,7 @@ class CUser{
         let fileURL = dirPaths[0].appendingPathComponent("currentImage.jpg")
         
         if let renderedJPEGData =
-            UIImageJPEGRepresentation(image, 0.5) {
+            image.jpegData(compressionQuality: 0.5) {
             try! renderedJPEGData.write(to: fileURL)
         }
         

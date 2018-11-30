@@ -36,7 +36,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         self.FaceLoginBtn.readPermissions = ["public_profile", "email"];
         self.FaceLoginBtn.delegate = self
         for const in self.FaceLoginBtn.constraints{
-            if const.firstAttribute == NSLayoutAttribute.height && const.constant == 28{
+            if const.firstAttribute == NSLayoutConstraint.Attribute.height && const.constant == 28{
                 self.FaceLoginBtn.removeConstraint(const)
             }
         }
@@ -114,9 +114,9 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
                             if results?.count == 0{
                                 self.dataRegistration = [facePerfil["name"] as! String, facePerfil["email"] as! String]
                                 
-                                let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+                                let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertController.Style.alert)
                                 
-                                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertActionStyle.default, handler: {alerAction in
+                                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
                                     
                                     self.camaraPerfilController.sourceType = .camera
                                     self.camaraPerfilController.cameraCaptureMode = .photo
@@ -124,7 +124,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
                                     self.present(self.camaraPerfilController, animated: true, completion: nil)
                                     
                                 }))
-                                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertActionStyle.destructive, handler: { action in
+                                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
                                     exit(0)
                                 }))
                                 self.present(EditPhoto, animated: true, completion: nil)
@@ -148,11 +148,14 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     }
     
     //MARK: -EVENTO PARA DETECTAR FOTO Y VIDEO TIRADA
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         if camaraPerfilController.cameraDevice == .front{
-            let mediaType = info[UIImagePickerControllerMediaType] as! NSString
+            let mediaType = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.mediaType)] as! NSString
             self.camaraPerfilController.dismiss(animated: true, completion: nil)
-            let photoPreview = info[UIImagePickerControllerOriginalImage] as? UIImage
+            let photoPreview = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
             
             let imagenURL = self.saveImageToFile(photoPreview!)
             
@@ -190,15 +193,15 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
             
         }else{
             self.camaraPerfilController.dismiss(animated: true, completion: nil)
-            let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Wrong Camara"), message: NSLocalizedString("The profile only accepts selfies photo.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+            let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Wrong Camara"), message: NSLocalizedString("The profile only accepts selfies photo.", comment:""), preferredStyle: UIAlertController.Style.alert)
             
-            EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a picture again", comment:"Yes"), style: UIAlertActionStyle.default, handler: {alerAction in
+            EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a picture again", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
                 self.camaraPerfilController.sourceType = .camera
                 self.camaraPerfilController.cameraCaptureMode = .photo
                 self.camaraPerfilController.cameraDevice = .front
                 self.present(self.camaraPerfilController, animated: true, completion: nil)
             }))
-            EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertActionStyle.destructive, handler: { action in
+            EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
                 exit(0)
             }))
             self.present(EditPhoto, animated: true, completion: nil)
@@ -216,7 +219,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         let fileURL = dirPaths[0].appendingPathComponent(image.description)
         
         if let renderedJPEGData =
-            UIImageJPEGRepresentation(image, 0.5) {
+            image.jpegData(compressionQuality: 0.5) {
             try! renderedJPEGData.write(to: fileURL)
         }
         
@@ -239,4 +242,14 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         print("Login Out")
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }
