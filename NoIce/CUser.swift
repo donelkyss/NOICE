@@ -57,9 +57,8 @@ class CUser{
         self.UserContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
             if error == nil{
                self.recordID = record?.recordID
-                print("new USER \(record?.recordID)")
             }else{
-                print("error \(String(describing: error))")
+                print("error \(error.debugDescription)")
             }
         })
         
@@ -136,7 +135,7 @@ class CUser{
         let photoUser = CKAsset(fileURL: imagenURL)
         self.UserContainer.publicCloudDatabase.fetch(withRecordID: self.recordID, completionHandler: { (record, error) in
             if error != nil {
-                print("Error fetching photo record: \(error?.localizedDescription)")
+                print("Error fetching photo record: \(String(describing: error?.localizedDescription))")
             } else {
               
                 record?.setObject(photoUser as CKRecordValue?, forKey: "foto")
@@ -144,7 +143,7 @@ class CUser{
                 // Save this record again
                 self.UserContainer.publicCloudDatabase.save(record!, completionHandler: { (savedRecord, saveError) in
                     if saveError != nil {
-                        print("Error saving newPhoto: \(saveError?.localizedDescription)")
+                        print("Error saving newPhoto: \(String(describing: saveError?.localizedDescription))")
                         self.ActualizarPhoto(newphoto: newphoto)
                     } else {
                         self.FotoPerfil = newphoto
@@ -176,7 +175,7 @@ class CUser{
         
         self.UserContainer.publicCloudDatabase.fetch(withRecordID: self.recordID, completionHandler: { (record, error) in
             if error != nil {
-                print("Error fetching bloqueados record: \(error?.localizedDescription)")
+                print("Error fetching bloqueados record: \(String(describing: error?.localizedDescription))")
             } else {
                 record?.setObject(self.bloqueados as CKRecordValue?, forKey: "bloqueados")
                 // Save this record again

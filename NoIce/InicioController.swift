@@ -30,7 +30,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
 
     override func viewDidLoad(){
         super.viewDidLoad()
-        
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         //MARK: -INICIALIZAR CAMARA
         self.camaraPerfilController = UIImagePickerController()
         self.camaraPerfilController.delegate = self
@@ -142,15 +142,19 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
                     
                     if myvariables.usuariosMostrar.count > 0{
                         DispatchQueue.main.async {
-                            let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "UsersConnected") as! UsersConnected
-                            self.navigationController?.show(vc, sender: nil)
+                            let vc = R.storyboard.main.usersConnected()
+                            //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "UsersConnected") as! UsersConnected
+                            self.navigationController?.setNavigationBarHidden(false, animated: true)
+                            self.navigationController?.show(vc!, sender: nil)
                         }
                     }else{
                         self.locationManager.stopUpdatingLocation()
                         let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
                         alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertAction.Style.default, handler: {alerAction in
-                                let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ProfileView") as! ProfileController
-                                self.navigationController?.show(vc, sender: nil)
+                                let vc  = R.storyboard.main.profileView()
+                                //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ProfileView") as! ProfileController
+                                self.navigationController?.setNavigationBarHidden(false, animated: true)
+                                self.navigationController?.show(vc!, sender: nil)
                         }))
                         self.present(alertaClose, animated: true, completion: nil)
                     }

@@ -37,8 +37,9 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
     
     override func viewWillAppear(_ animated: Bool) {
         if myvariables.usuariosMostrar.count == 0{
-            let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
-            self.navigationController?.show(vc, sender: nil)
+            let vc = R.storyboard.main.inicioView()
+            //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
+            self.navigationController?.show(vc!, sender: nil)
         }else{
             connectedTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(BuscarUsuariosConectados), userInfo: nil, repeats: true)
             self.collectionView.reloadData()
@@ -55,6 +56,7 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
         self.userContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
             if (error == nil) {
                 myvariables.usuariosMostrar.removeAll()
+                
                 //if (results?.count)! != myvariables.usuariosMostrar.count{
                 if (results?.count)! > 0{
                     var bloqueados = [String]()
@@ -68,12 +70,16 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
                         }
                         i += 1
                     }
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
                 }else{
                     self.connectedTimer.invalidate()
                     let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you.", comment:"No hay usuarios conectados"), preferredStyle: UIAlertController.Style.alert)
                     alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertAction.Style.default, handler: {alerAction in
-                        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ProfileView") as! ProfileController
-                        self.navigationController?.show(vc, sender: nil)
+                        let vc = R.storyboard.main.profileView()
+                        //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "ProfileView") as! ProfileController
+                        self.navigationController?.show(vc!, sender: nil)
                     }))
                     self.present(alertaClose, animated: true, completion: nil)
                 }
@@ -81,9 +87,7 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
                 print("ERROR DE CONSULTA " + error.debugDescription)
             }
         }))
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
+        
     }
     
     @objc func hiddeTextView(sender: UITapGestureRecognizer){
@@ -114,9 +118,10 @@ class UsersConnected: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Chat") as! ChatViewController
-        vc.chatOpenPos = indexPath.row
-        self.navigationController?.show(vc, sender: nil)
+        let vc = R.storyboard.main.chat()
+        //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "Chat") as! ChatViewController
+        vc!.chatOpenPos = indexPath.row
+        self.navigationController?.show(vc!, sender: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {

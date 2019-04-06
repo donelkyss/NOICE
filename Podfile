@@ -6,7 +6,10 @@ target 'NoIce' do
   use_frameworks!
    pod 'Canvas'
    pod 'JSQMessagesViewController'
-   pod 'FBSDKCoreKit'
-   pod 'FBSDKLoginKit'
+   pod 'FacebookCore'
+   pod 'FacebookLogin'
+   pod 'FBSDKCoreKit', '~> 4.38.0'
+   pod 'FBSDKLoginKit', '~> 4.38.0'
    pod 'FacebookSDK'
+   pod 'R.swift', '5.0.0.alpha.3'
 end

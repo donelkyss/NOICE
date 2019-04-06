@@ -10,9 +10,10 @@ import Foundation
 import UIKit
 import CoreLocation
 import CloudKit
-import FBSDKCoreKit
-import FBSDKLoginKit
 import Vision
+import FacebookCore
+import FBSDKLoginKit
+import FacebookLogin
 
 
 class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, FBSDKLoginButtonDelegate {
@@ -40,12 +41,13 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
                 self.FaceLoginBtn.removeConstraint(const)
             }
         }
+        var temp = "esto es una pruba"
+        let temp2 = temp.components(separatedBy: <#T##CharacterSet#>)
         let buttonText = NSAttributedString(string: "Facebook")
         self.FaceLoginBtn.setAttributedTitle(buttonText, for: .normal)
         
         self.camaraPerfilController = UIImagePickerController()
         self.camaraPerfilController.delegate = self
-        
         
         if self.appUpdateAvailable(){
             
@@ -133,8 +135,9 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
                                 myvariables.userperfil.ActualizarConectado(estado: "1")
                                 DispatchQueue.main.async {
                                     self.LoadingView.isHidden = true
-                                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
-                                    self.navigationController?.show(vc, sender: nil)
+                                    let vc = R.storyboard.main.inicioView()
+                                    //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
+                                    self.navigationController?.show(vc!, sender: nil)
                                 }
                             }
                         }else{
@@ -153,7 +156,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
 let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
 
         if camaraPerfilController.cameraDevice == .front{
-            let mediaType = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.mediaType)] as! NSString
+            //let mediaType = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.mediaType)] as! NSString
             self.camaraPerfilController.dismiss(animated: true, completion: nil)
             let photoPreview = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
             
@@ -175,10 +178,10 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
                     
                     DispatchQueue.main.async {
                         self.LoadingView.isHidden = true
-                        let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
-                        self.navigationController?.show(vc, sender: nil)
+                        //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
+                        let vc = R.storyboard.main.inicioView()
+                        self.navigationController?.show(vc!, sender: nil)
                     }
-                    print("new USER \(record?.recordID)")
                 }else{
                     print("error \(String(describing: error))")
                 }
@@ -229,9 +232,11 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     @IBAction func FaceLogin(_ sender: Any) {
         
     }
+    
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+        
         if error != nil{
-            print("error \(error)")
+            print("error \(String(describing: error))")
         }else{
             self.getFBUserData()
             

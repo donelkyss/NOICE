@@ -10,15 +10,13 @@ import UIKit
 import CoreData
 import CloudKit
 import FBSDKLoginKit
+import FacebookCore
 
 
 struct myvariables {
-    static var chatsOpen = [CUser]()
     static var userperfil: CUser!
     static var currentPosition = CLLocation()
     static var usuariosMostrar = [CUser]()
-    static var MensajesRecibidos = [CMensaje]()
-    static var MensajesEnviados = [CMensaje]()
 }
 
 @UIApplicationMain
@@ -39,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //FBSDKApplicationDelegate.sharedInstance().application( application, didFinishLaunchingWithOptions: launchOptions)
         //return true
+        
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

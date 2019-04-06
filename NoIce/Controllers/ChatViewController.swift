@@ -131,7 +131,6 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
-       
         cell.textView.textColor = UIColor.black
 
         return cell
@@ -161,11 +160,11 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         self.MSGContainer.publicCloudDatabase.perform(queryVista, inZoneWith: nil, completionHandler: ({results, error in
             if (error == nil) {
                 
-                if (results?.count)! > 0{
+                if (results!.count) > 0{
                     var i = 0
-                    while i < (results?.count)!{
-                        let MSG = JSQMessage(senderId: results?[i].value(forKey: "emisorEmail") as! String, displayName: "", text: results?[i].value(forKey: "textoMensaje") as! String)
-                        self.EliminarMSGRead(record: (results?[i].recordID)!)
+                    while i < (results!.count){
+                        let MSG = JSQMessage(senderId: String(describing: results![i].value(forKey: "emisorEmail")), displayName: "", text: String(describing: results![i].value(forKey: "textoMensaje")))
+                        self.EliminarMSGRead(record: (results![i].recordID))
                         self.mensajesMostrados.append(MSG!)
                         myvariables.usuariosMostrar[self.chatOpenPos].NewMsg = false
                         i += 1
@@ -185,8 +184,9 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
                 self.MSGTimer.invalidate()
                 myvariables.usuariosMostrar.remove(at: self.chatOpenPos)
                 DispatchQueue.main.async {
-                    let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
-                    self.navigationController?.show(vc, sender: nil)
+                    let vc = R.storyboard.main.inicioView()
+                    //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
+                    self.navigationController?.show(vc!, sender: nil)
                 }
             }
         }
@@ -197,7 +197,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
             if error == nil{
 
             }else{
-                print(error)
+                
             }
         })
     }
