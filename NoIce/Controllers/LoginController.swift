@@ -42,7 +42,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
             }
         }
         var temp = "esto es una pruba"
-        let temp2 = temp.components(separatedBy: <#T##CharacterSet#>)
+        let temp2 = temp.components(separatedBy: "Prueba")
         let buttonText = NSAttributedString(string: "Facebook")
         self.FaceLoginBtn.setAttributedTitle(buttonText, for: .normal)
         
@@ -106,9 +106,11 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         if((FBSDKAccessToken.current()) != nil){
             self.locationManager.requestWhenInUseAuthorization()
             self.LoadingView.isHidden = false
-            FBSDKGraphRequest(graphPath: "me",parameters: ["fields": "id, name, email"]).start(completionHandler: { (connection, result, error) -> Void in
+            FBSDKGraphRequest(graphPath: "me",parameters: ["fields": "id, name, first_name, last_name,email"]).start(completionHandler: { (connection, result, error) -> Void in
                 if (error == nil){
+                    print(result)
                     let facePerfil = result as! NSDictionary
+                    print(facePerfil)
                     let predicate = NSPredicate(format: "email = %@",facePerfil["email"] as! String)
                     let query = CKQuery(recordType:"CUsuarios", predicate: predicate)
                     self.loginContainer.publicCloudDatabase.perform(query, inZoneWith: nil, completionHandler: ({results, error in

@@ -14,14 +14,14 @@ PODS:
     - FacebookCore (~> 0.5)
     - FBSDKCoreKit (~> 4.37)
     - FBSDKLoginKit (~> 4.37)
-  - FacebookSDK (4.38.0):
+  - FacebookSDK (4.43.0):
     - Bolts (~> 1.9)
-    - FacebookSDK/CoreKit (= 4.38.0)
-    - FacebookSDK/MarketingKit (= 4.38.0)
-  - FacebookSDK/CoreKit (4.38.0):
+    - FacebookSDK/CoreKit (= 4.43.0)
+    - FacebookSDK/MarketingKit (= 4.43.0)
+  - FacebookSDK/CoreKit (4.43.0):
     - Bolts (~> 1.9)
     - FBSDKCoreKit
-  - FacebookSDK/MarketingKit (4.38.0):
+  - FacebookSDK/MarketingKit (4.43.0):
     - Bolts (~> 1.9)
     - FacebookSDK/CoreKit
     - FBSDKMarketingKit
@@ -36,7 +36,7 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - R.swift (5.0.0.alpha.3):
     - R.swift.Library (~> 5.0.0.alpha.2)
-  - R.swift.Library (5.0.0)
+  - R.swift.Library (5.0.1)
 
 DEPENDENCIES:
   - Canvas
@@ -68,14 +68,14 @@ SPEC CHECKSUMS:
   Canvas: eb861e3b555d032648146c8ffda1a5dea40059ca
   FacebookCore: 74288d0add931d361b1596beae787ab72c438249
   FacebookLogin: ebcf34714a1cb9f0759d9f071cfb01ed500996cf
-  FacebookSDK: 73f54b8b94e09b05647cdef0af147f470cd3edc6
+  FacebookSDK: d20336d70de2b2d80b5414358b3a75aa7f9d82ec
   FBSDKCoreKit: 8d47857400e2f5bdea697a80daff882e91c84ef6
   FBSDKLoginKit: 4621c690d9dd8628031a4791497062183ea34b0d
   FBSDKMarketingKit: e609f39d74ab273cf52e2f8b7e8829ed412b2827
   JSQMessagesViewController: 6587f56aedbcb150a8ba1d968e1ef58b1bc758b7
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   R.swift: ca4207ecc94545a1611ca0b2ae1197458b6ba30a
-  R.swift.Library: 0bf390e729bc10bb2c9e4fb78bd043164a7be4ff
+  R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
 
 PODFILE CHECKSUM: 0b403f073f25ad62452f940587e129f82768a16b
 
