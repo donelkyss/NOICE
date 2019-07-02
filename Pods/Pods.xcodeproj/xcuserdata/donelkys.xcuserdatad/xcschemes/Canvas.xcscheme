@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1020"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1B1F7D992188AE1C4099470FAF013C96"
+               BlueprintIdentifier = "E95AC4C15E822F1C7D47D2F06A9218F5"
+               BuildableName = "Canvas.framework"
                BlueprintName = "Canvas"
-               ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "Canvas.framework">
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

@@ -10,8 +10,6 @@ import UIKit
 import CloudKit
 import AssetsLibrary
 import CoreImage
-import FacebookCore
-import FBSDKLoginKit
 
 class ProfileController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
@@ -50,7 +48,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
         self.userPerfilPhoto.contentMode = .scaleAspectFill
         self.userPerfilPhoto.layer.cornerRadius = self.profilePhotoHeight.constant / 6
         self.userPerfilPhoto.clipsToBounds = true
-        self.userPerfilPhoto.image = myvariables.userperfil.FotoPerfil
+        self.userPerfilPhoto.image = MyVariables.userLogged.FotoPerfil
         
     }
     
@@ -72,7 +70,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
             //let newimage = info[UIImagePickerControllerOriginalImage] as? UIImage
             
             let photoPreview = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
-            myvariables.userperfil.ActualizarPhoto(newphoto: photoPreview!)
+            MyVariables.userLogged.ActualizarPhoto(newphoto: photoPreview!)
             self.userPerfilPhoto.image = photoPreview
             /*
              let imagenURL = self.saveImageToFile(photoPreview!)
@@ -85,7 +83,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
              let faces = faceDetector.features(in: image) as! [CIFaceFeature]
              print("faces \(faces)")
              if faces.count > 0{
-             myvariables.userperfil.ActualizarPhoto(newphoto: photoPreview!)
+             MyVariables.userLogged.ActualizarPhoto(newphoto: photoPreview!)
              self.userPerfilPhoto.image = photoPreview
              }else{
              let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Wrong Camara"), message: NSLocalizedString("The profile only accepts selfies photo. Please, make sure that your face is completely visible.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
@@ -101,7 +99,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
              self.present(EditPhoto, animated: true, completion: nil)
              }*/
             
-            //myvariables.userperfil.ActualizarPhoto(newphoto: newimage!)
+            //MyVariables.userLogged.ActualizarPhoto(newphoto: newimage!)
             //self.userPerfilPhoto.image = newimage
             
         }else{
@@ -159,10 +157,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     }
     
     @IBAction func SignOut(_ sender: Any) {
-        FBSDKAccessToken.setCurrent(nil)
-        FBSDKProfile.setCurrent(nil)
-        FBSDKLoginManager().logOut()
-        myvariables.userperfil.ActualizarConectado(estado: "0")
+        MyVariables.userLogged.ActualizarConectado(estado: "0")
     }
     
     
