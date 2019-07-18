@@ -18,7 +18,7 @@ extension UsersConnected: UICollectionViewDataSource, UICollectionViewDelegate, 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserCell",for: indexPath) as! UserCollectionViewCell
-    cell.displayContent(image: MyVariables.usuariosMostrar[indexPath.row].FotoPerfil, hidden: !MyVariables.usuariosMostrar[indexPath.row].NewMsg)
+    cell.initContent(user: MyVariables.usuariosMostrar[indexPath.row])//(image: MyVariables.usuariosMostrar[indexPath.row].FotoPerfil, hidden: !MyVariables.usuariosMostrar[indexPath.row].NewMsg)
     cell.userPhoto.layer.cornerRadius = (cell.userPhoto.frame.width) / 8
     cell.userPhoto.contentMode = .scaleAspectFill
     cell.userPhoto.clipsToBounds = true

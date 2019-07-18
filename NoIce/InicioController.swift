@@ -28,6 +28,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   
   override func viewDidLoad(){
     super.viewDidLoad()
+    self.SearchingView.addShadow()
     self.navigationController?.setNavigationBarHidden(true, animated: true)
     //MARK: -INICIALIZAR CAMARA
     self.camaraPerfilController = UIImagePickerController()
@@ -119,9 +120,9 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   @objc func BuscarUsuariosConectados(){
     
     if MyVariables.userLogged.Posicion != MyVariables.currentPosition {
-      let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(posicion, %@) < 300 and conectado == %@",MyVariables.userLogged.Posicion, "1")
+      let userLoggedReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: MyVariables.userLogged.id), action: .none)
+      let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(posicion, %@) < 50 and conectado == %@ and recordID != %@",MyVariables.userLogged.Posicion, "1", userLoggedReference)
       self.TimerStart(estado: 0)
-      //let predicateUsuarioIn = NSPredicate(format: "conectado == %@ and email != %@", "1", MyVariables.userLogged.Email)
       let queryUsuarioIn = CKQuery(recordType: "UsersProfile",predicate: predicateUsuarioIn)
       self.cloudContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
         if (error == nil) {
@@ -130,19 +131,17 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
           if (results?.count)! > 0{
             var i = 0
             while i < (results?.count)!{
-//
-//              let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
-//              if !bloqueados.contains(MyVariables.userLogged.recordID.recordName) && !MyVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "recordName") as! String){
-//                print("hereee")
-//                let usuarioTemp = User(user: results![i])
-//                usuarioTemp.BuscarNuevosMSG(userDestino: MyVariables.userLogged!.recordID)
-//                MyVariables.usuariosMostrar.append(usuarioTemp)
-//              }
-              if results![i].recordID.recordName != MyVariables.userLogged.id{
-                let usuarioTemp = User(user: results![i])
-                usuarioTemp.BuscarNuevosMSG(userDestino: MyVariables.userLogged.id)
-                MyVariables.usuariosMostrar.append(usuarioTemp)
-              }
+              //
+              //              let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
+              //              if !bloqueados.contains(MyVariables.userLogged.recordID.recordName) && !MyVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "recordName") as! String){
+              //                print("hereee")
+              //                let usuarioTemp = User(user: results![i])
+              //                usuarioTemp.BuscarNuevosMSG(userDestino: MyVariables.userLogged!.recordID)
+              //                MyVariables.usuariosMostrar.append(usuarioTemp)
+              //              }
+              let usuarioTemp = User(user: results![i])
+              MyVariables.usuariosMostrar.append(usuarioTemp)
+                // MyVariables.usuariosMostrar[i].BuscarNuevosMSG(userDestino: MyVariables.userLogged.id)
               i += 1
             }
           }

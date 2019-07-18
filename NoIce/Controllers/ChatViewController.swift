@@ -74,7 +74,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   
   override func viewWillAppear(_ animated: Bool) {
     self.BuscarNewMSG()
-    //MSGTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(BuscarNewMSG), userInfo: nil, repeats: true)
+    MSGTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(BuscarNewMSG), userInfo: nil, repeats: true)
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -100,6 +100,88 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     
   }
   
+
+  
+    // END COLLECTION VIEW FUNCTIONS
+    @objc func dismissKeyboard() {
+      //Las vistas y toda la jerarquía renuncia a responder, para esconder el teclado
+      print("here")
+      messageInputBar.inputTextView.resignFirstResponder()
+    }
+  
+    // SENDING BUTTONS FUNCTIONS
+  
+//    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
+//      mensajesMostrados.append(JSQMessage(senderId: MyVariables.userLogged.Email, displayName: "", text: text))
+//      collectionView.reloadData()
+//      SendNewMessage(text: text)
+//      finishSendingMessage()
+//    }
+//
+    //FUNCTION TO SEARCH NEW messageList
+    @objc func BuscarNewMSG() {
+      let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: MyVariables.userLogged.id), action: .none)
+      let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: MyVariables.usuariosMostrar[self.chatOpenPos].id), action: .none)
+      let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference,fromReference)
+
+      let queryVista = CKQuery(recordType: "Messages",predicate: predicateMesajes)
+      queryVista.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+      self.MSGContainer.publicCloudDatabase.perform(queryVista, inZoneWith: nil, completionHandler: ({results, error in
+        if (error == nil) {
+          if (results!.count) > 0{
+            //self.messageList.removeAll()
+            var i = 0
+            while i < (results!.count){
+              let message = Message(newMessage: results![i])
+              self.EliminarMSGRead(record: (results![i].recordID))
+              if !self.messageList.contains{$0.id == message.id}{
+                self.messageList.append(message)
+                MyVariables.usuariosMostrar[self.chatOpenPos].NewMsg = false
+              }
+             
+              i += 1
+            }
+          }
+        }else{
+          print(error.debugDescription)
+        }
+        DispatchQueue.main.async {
+          self.messagesCollectionView.reloadData()
+          self.messagesCollectionView.scrollToBottom(animated: true)
+        }
+      }))
+    }
+  
+    @IBAction func BlockUser(_ sender: Any) {
+      self.BloUser.isEnabled = false
+//      MyVariables.userLogged.ActualizarBloqueo(emailBloqueado: MyVariables.usuariosMostrar[self.chatOpenPos].Email){ success in
+//        if success{
+//          self.MSGTimer.invalidate()
+//          MyVariables.usuariosMostrar.remove(at: self.chatOpenPos)
+//          DispatchQueue.main.async {
+//            let vc = R.storyboard.main.inicioView()
+//            //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
+//            self.navigationController?.show(vc!, sender: nil)
+//          }
+//        }
+//      }
+    }
+  
+    func EliminarMSGRead(record : CKRecord.ID) {
+      self.MSGContainer.publicCloudDatabase.delete(withRecordID: record, completionHandler: {results, error in
+        if error == nil{
+          
+        }else{
+          print(error.debugDescription)
+        }
+      })
+    }
+  
+    func SendNewMessage(text: String) {
+      let newmensaje = Message(from: MyVariables.userLogged.id, to: MyVariables.usuariosMostrar[chatOpenPos].id, text: text)
+    }
+  }
+
 //    // COLLECTION VIEW FUNCTIONS
 //
 //    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
@@ -160,80 +242,3 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
 //
 //      return cell
 //    }
-  
-    // END COLLECTION VIEW FUNCTIONS
-    @objc func dismissKeyboard() {
-      //Las vistas y toda la jerarquía renuncia a responder, para esconder el teclado
-      print("here")
-      messageInputBar.inputTextView.resignFirstResponder()
-    }
-  
-    // SENDING BUTTONS FUNCTIONS
-  
-//    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
-//      mensajesMostrados.append(JSQMessage(senderId: MyVariables.userLogged.Email, displayName: "", text: text))
-//      collectionView.reloadData()
-//      SendNewMessage(text: text)
-//      finishSendingMessage()
-//    }
-//
-    //FUNCTION TO SEARCH NEW messageList
-    @objc func BuscarNewMSG() {
-      let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: MyVariables.userLogged.id), action: .none)
-      let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: MyVariables.usuariosMostrar[self.chatOpenPos].id), action: .none)
-      let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference, fromReference)
-
-      let queryVista = CKQuery(recordType: "Messages",predicate: predicateMesajes)
-      queryVista.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-      self.MSGContainer.publicCloudDatabase.perform(queryVista, inZoneWith: nil, completionHandler: ({results, error in
-        if (error == nil) {
-
-          if (results!.count) > 0{
-            var i = 0
-            while i < (results!.count){
-              let message = Message(newMessage: results![i])
-              //self.EliminarMSGRead(record: (results![i].recordID))
-              self.messageList.append(message)
-              MyVariables.usuariosMostrar[self.chatOpenPos].NewMsg = false
-              i += 1
-            }
-            print(self.messageList.count)
-          }
-        }else{
-          print(error.debugDescription)
-        }
-        DispatchQueue.main.async {
-          self.messagesCollectionView.reloadData()
-        }
-      }))
-    }
-  
-    @IBAction func BlockUser(_ sender: Any) {
-      self.BloUser.isEnabled = false
-//      MyVariables.userLogged.ActualizarBloqueo(emailBloqueado: MyVariables.usuariosMostrar[self.chatOpenPos].Email){ success in
-//        if success{
-//          self.MSGTimer.invalidate()
-//          MyVariables.usuariosMostrar.remove(at: self.chatOpenPos)
-//          DispatchQueue.main.async {
-//            let vc = R.storyboard.main.inicioView()
-//            //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
-//            self.navigationController?.show(vc!, sender: nil)
-//          }
-//        }
-//      }
-    }
-  
-    func EliminarMSGRead(record : CKRecord.ID) {
-      self.MSGContainer.publicCloudDatabase.delete(withRecordID: record, completionHandler: {results, error in
-        if error == nil{
-          
-        }else{
-          
-        }
-      })
-    }
-  
-    func SendNewMessage(text: String) {
-      let newmensaje = Message(from: MyVariables.userLogged.id, to: MyVariables.usuariosMostrar[chatOpenPos].id, text: text)
-    }
-  }

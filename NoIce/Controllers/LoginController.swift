@@ -22,10 +22,12 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
   
   @IBOutlet weak var LoginView: UIView!
   @IBOutlet weak var loadingView: UIVisualEffectView!
-
+  @IBOutlet weak var loadingAnimation: UIView!
+  
   override func viewDidLoad(){
     super.viewDidLoad()
     
+    self.loadingAnimation.addShadow()
     self.camaraPerfilController = UIImagePickerController()
     self.camaraPerfilController.delegate = self
     
@@ -91,8 +93,11 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
           MyVariables.userLogged.ActualizarConectado(estado: "1")
           DispatchQueue.main.async {
             self.loadingView.isHidden = true
-            let vc = R.storyboard.main.inicioView()
+            let vc = R.storyboard.main.usersConnected()
+            self.navigationController?.setNavigationBarHidden(false, animated: true)
             self.navigationController?.show(vc!, sender: nil)
+//            let vc = R.storyboard.main.inicioView()
+//            self.navigationController?.show(vc!, sender: nil)
           }
         }
       })
@@ -104,57 +109,7 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
   func registerUser(){
     loadingView.isHidden = true
   }
-  
-  //GET FACEBOOK DATA
-//  func getFBUserData(){
-//    if((FBSDKAccessToken.current()) != nil){
-//      self.locationManager.requestWhenInUseAuthorization()
-//      self.loadingView.isHidden = false
-//      FBSDKGraphRequest(graphPath: "me",parameters: ["fields": "id, name, email"]).start(completionHandler: { (connection, result, error) -> Void in
-//        if (error == nil){
-//          print(result)
-//          let facePerfil = result as! NSDictionary
-//          print(facePerfil)
-//          let predicate = NSPredicate(format: "email = %@",facePerfil["email"] as! String)
-//          let query = CKQuery(recordType:"CUsuarios", predicate: predicate)
-//          self.loginContainer.publicCloudDatabase.perform(query, inZoneWith: nil, completionHandler: ({results, error in
-//            if (error == nil) {
-//              if results?.count == 0{
-//                self.dataRegistration = [facePerfil["name"] as! String, facePerfil["email"] as! String]
-//
-//                let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Cambiar la foto de perfil"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertController.Style.alert)
-//
-//                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
-//
-//                  self.camaraPerfilController.sourceType = .camera
-//                  self.camaraPerfilController.cameraCaptureMode = .photo
-//                  self.camaraPerfilController.cameraDevice = .front
-//                  self.present(self.camaraPerfilController, animated: true, completion: nil)
-//
-//                }))
-//                EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
-//                  exit(0)
-//                }))
-//                self.present(EditPhoto, animated: true, completion: nil)
-//              }else{
-//                MyVariables.userLogged = User(user: results![0])
-//                MyVariables.userLogged.ActualizarConectado(estado: "1")
-//                DispatchQueue.main.async {
-//                  self.loadingView.isHidden = true
-//                  let vc = R.storyboard.main.inicioView()
-//                  //let vc = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "InicioView") as! InicioController
-//                  self.navigationController?.show(vc!, sender: nil)
-//                }
-//              }
-//            }else{
-//              print("ERROR DE CONSULTA " + error.debugDescription)
-//            }
-//          }))
-//        }
-//      })
-//
-//    }
-//  }
+
   
   //MARK: -EVENTO PARA DETECTAR FOTO Y VIDEO TIRADA
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -182,8 +137,11 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
           UserDefaults.standard.set(record?.recordID.recordName, forKey: "userRecordID")
           DispatchQueue.main.async {
             self.loadingView.isHidden = true
-            let vc = R.storyboard.main.inicioView()
+            let vc = R.storyboard.main.usersConnected()
+            self.navigationController?.setNavigationBarHidden(false, animated: true)
             self.navigationController?.show(vc!, sender: nil)
+//            let vc = R.storyboard.main.inicioView()
+//            self.navigationController?.show(vc!, sender: nil)
           }
         }else{
           print("error \(String(describing: error))")

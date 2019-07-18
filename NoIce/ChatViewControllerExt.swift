@@ -25,7 +25,6 @@ extension ChatViewController: MessagesDataSource{
   
 }
 
-
 // MARK: - MessagesLayoutDelegate
 
 extension ChatViewController: MessagesLayoutDelegate {
@@ -81,12 +80,6 @@ extension ChatViewController: MessagesDisplayDelegate {
     return .bubbleTail(corner, .curved)
   }
 }
-
-//extension ChatViewController: MessageInputBarDelegate{
-//  func messageInputBar(_ inputBar: MessageInputBar,didPressSendButtonWith text: String) {
-//    print("heress")
-//  }
-//}
 
 extension ChatViewController: InputBarAccessoryViewDelegate{
   func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {

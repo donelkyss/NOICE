@@ -39,33 +39,33 @@ class User{
     
   }
   
-  init(NombreApellidos: String, Email: String, photo: CKAsset, pos: CLLocation){
-    
-    let recordUser = CKRecord(recordType:"Users")
-    recordUser.setObject(photo as CKRecordValue, forKey: "foto")
-    recordUser.setObject(["nadie"] as CKRecordValue, forKey: "bloqueados")
-    recordUser.setObject("1" as CKRecordValue, forKey: "conectado")
-    recordUser.setObject(pos as CKRecordValue, forKey: "posicion")
-    
-    self.UserContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
-      if error == nil{
-        self.id = record?.recordID.recordName
-      }else{
-        print("error \(error.debugDescription)")
-      }
-    })
-    
-    self.bloqueados = ["nadie"]
-    self.Posicion = pos
-    do{
-      let photoPerfil = try Data(contentsOf: photo.fileURL! as URL)
-      self.FotoPerfil = UIImage(data: photoPerfil)!
-    }catch{
-      self.FotoPerfil = UIImage(named: "user")!
-    }
-    self.conectado = "1"
-    self.NewMsg = false
-  }
+//  init(NombreApellidos: String, Email: String, photo: CKAsset, pos: CLLocation){
+//
+//    let recordUser = CKRecord(recordType:"Users")
+//    recordUser.setObject(photo as CKRecordValue, forKey: "foto")
+//    recordUser.setObject(["nadie"] as CKRecordValue, forKey: "bloqueados")
+//    recordUser.setObject("1" as CKRecordValue, forKey: "conectado")
+//    recordUser.setObject(pos as CKRecordValue, forKey: "posicion")
+//
+//    self.UserContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
+//      if error == nil{
+//        self.id = record?.recordID.recordName
+//      }else{
+//        print("error \(error.debugDescription)")
+//      }
+//    })
+//
+//    self.bloqueados = ["nadie"]
+//    self.Posicion = pos
+//    do{
+//      let photoPerfil = try Data(contentsOf: photo.fileURL! as URL)
+//      self.FotoPerfil = UIImage(data: photoPerfil)!
+//    }catch{
+//      self.FotoPerfil = UIImage(named: "user")!
+//    }
+//    self.conectado = "1"
+//    self.NewMsg = false
+//  }
 
   func ActualizarPosicion(posicionActual: CLLocation) {
     
@@ -138,24 +138,24 @@ class User{
     })
   }
   
-  func BuscarNuevosMSG(userDestino: String) {
-    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: userDestino), action: .none)
-    let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.id), action: .none)
-    let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference, fromReference)
-    
-    let queryMSGVista = CKQuery(recordType: "Messages",predicate: predicateMesajes)
-    
-    self.UserContainer.publicCloudDatabase.perform(queryMSGVista, inZoneWith: nil, completionHandler: ({results, error in
-      if (error == nil) {
-        if (results?.count)! > 0{
-          self.NewMsg = true
-        }
-      }else{
-        print(error.debugDescription)
-      }
-    }))
-    
-  }
+//  func BuscarNuevosMSG(userDestino: String) {
+//    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: userDestino), action: .none)
+//    let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.id), action: .none)
+//    let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference, fromReference)
+//
+//    let queryMSGVista = CKQuery(recordType: "Messages",predicate: predicateMesajes)
+//
+//    self.UserContainer.publicCloudDatabase.perform(queryMSGVista, inZoneWith: nil, completionHandler: ({results, error in
+//      if (error == nil) {
+//        if (results?.count)! > 0{
+//          self.NewMsg = true
+//        }
+//      }else{
+//        print(error.debugDescription)
+//      }
+//    }))
+//
+//  }
   
 //  func ActualizarBloqueo(emailBloqueado: String, completionHandler: @escaping(Bool)->()){
 //    self.bloqueados.append(emailBloqueado)

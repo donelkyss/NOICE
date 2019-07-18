@@ -41,6 +41,7 @@
 		C68C1FEE22AC03EB00E2D18B /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68C1FED22AC03EB00E2D18B /* ChatController.swift */; };
 		C68C1FF122ACA93A00E2D18B /* MessageKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68C1FF022ACA93A00E2D18B /* MessageKind.swift */; };
 		C68C1FF422AD63C300E2D18B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68C1FF322AD63C300E2D18B /* UIColor.swift */; };
+		C6A0031A22E021AA0086DCB5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A0031922E021AA0086DCB5 /* UIView.swift */; };
 		C6B437E2216F1242001F545F /* UsersConnected.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B437E1216F1242001F545F /* UsersConnected.swift */; };
 		C6B437E4216F9A7C001F545F /* UserCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B437E3216F9A7C001F545F /* UserCollectionViewCell.swift */; };
 		C6C053A8225C475E0056CB7A /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C053A7225C475E0056CB7A /* KeychainService.swift */; };
@@ -99,6 +100,7 @@
 		C68C1FED22AC03EB00E2D18B /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		C68C1FF022ACA93A00E2D18B /* MessageKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageKind.swift; sourceTree = "<group>"; };
 		C68C1FF322AD63C300E2D18B /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		C6A0031922E021AA0086DCB5 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		C6B437E1216F1242001F545F /* UsersConnected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersConnected.swift; sourceTree = "<group>"; };
 		C6B437E3216F9A7C001F545F /* UserCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionViewCell.swift; sourceTree = "<group>"; };
 		C6C053A7225C475E0056CB7A /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				C68C1FF322AD63C300E2D18B /* UIColor.swift */,
+				C6A0031922E021AA0086DCB5 /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -453,6 +456,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6A0031A22E021AA0086DCB5 /* UIView.swift in Sources */,
 				B5D9DB261F4F892E009955B9 /* UIViewAnchorPoint.swift in Sources */,
 				B5D9DB2A1F4F892E009955B9 /* UIVisualEffectViewX.swift in Sources */,
 				B586682E1E610E3500D463A4 /* UserTableViewCell.swift in Sources */,
