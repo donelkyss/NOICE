@@ -33,15 +33,11 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     messagesCollectionView.messageCellDelegate = self
     messageInputBar.delegate = self
     
-    
-    
     self.BloUser.isEnabled = false
-//    self.senderId = MyVariables.userLogged.Email
-//    self.senderDisplayName = ""
     
     //Hide adjunte button
     //self.inputToolbar.contentView.leftBarButtonItem = nil
-    
+    self.navigationController?.setNavigationBarHidden(false, animated: true)
     let image = MyVariables.usuariosMostrar[self.chatOpenPos].FotoPerfil
 
     let imgBackground:UIImageView = UIImageView(frame: self.view.bounds)
