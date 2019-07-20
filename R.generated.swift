@@ -16,6 +16,20 @@ struct R: Rswift.Validatable {
     try intern.validate()
   }
   
+  /// This `R.file` struct is generated, and contains static references to 1 files.
+  struct file {
+    /// Resource file `user.png`.
+    static let userPng = Rswift.FileResource(bundle: R.hostingBundle, name: "user", pathExtension: "png")
+    
+    /// `bundle.url(forResource: "user", withExtension: "png")`
+    static func userPng(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.userPng
+      return fileResource.bundle.url(forResource: fileResource)
+    }
+    
+    fileprivate init() {}
+  }
+  
   /// This `R.image` struct is generated, and contains static references to 14 images.
   struct image {
     /// Image `background`.
