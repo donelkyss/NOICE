@@ -12,7 +12,7 @@ import CoreLocation
 import CloudKit
 import Vision
 
-class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   var uuid: String!
   var locationManager = CLLocationManager()
   var loginContainer = CKContainer.default()
@@ -27,8 +27,9 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     super.viewDidLoad()
     if let uuid = UIDevice.current.identifierForVendor?.uuidString {
       self.uuid = uuid
-        print("Identifier \(uuid)")
     }
+    
+    self.locationManager.delegate = self
     self.loadingAnimation.addShadow()
     self.camaraPerfilController = UIImagePickerController()
     self.camaraPerfilController.delegate = self
@@ -46,6 +47,70 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
       
     }
     self.getUserPhoto()
+  }
+  
+  //MARK:- CHECK LOCATION PERMISSIONS
+  override func viewDidAppear(_ animated: Bool) {
+    
+    if CLLocationManager.locationServicesEnabled(){
+      switch(CLLocationManager.authorizationStatus()) {
+      case .notDetermined:
+        self.locationManager.requestWhenInUseAuthorization()
+      case .restricted, .denied:
+        self.showLocationError()
+      case .authorizedAlways, .authorizedWhenInUse:
+        //self.TimerStart(estado: 1)
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager.startUpdatingLocation()
+        break
+      }
+    }else{
+      self.showLocationError()
+    }
+    
+  }
+  
+  //MARK: - ACTUALIZACION DE GEOLOCALIZACION
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    if GlobalVariables.userLogged != nil && CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
+      if GlobalVariables.userLogged.location.distance(from: locations.last!) > 20{
+        GlobalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
+      }
+    }else{
+      print("here")
+    }
+  }
+  
+  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    switch(CLLocationManager.authorizationStatus()) {
+    case .notDetermined:
+      self.locationManager.requestWhenInUseAuthorization()
+    case .restricted, .denied:
+      self.showLocationError()
+    case .authorizedAlways, .authorizedWhenInUse:
+      //self.TimerStart(estado: 1)
+      self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+      self.locationManager.startUpdatingLocation()
+      break
+    }
+  }
+  
+  func showLocationError(){
+    let locationAlert = UIAlertController (title: NSLocalizedString("Location Error", comment: ""), message: (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" searches the users closer to your position. Please go to Settings, active the Location services and open ", comment: "") + (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" again.", comment: ""), preferredStyle: .alert)
+    locationAlert.addAction(UIAlertAction(title: NSLocalizedString("Active Location", comment: ""), style: .default, handler: {alerAction in
+      if #available(iOS 10.0, *) {
+        let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+        UIApplication.shared.open(settingsURL, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
+          exit(0)
+        })
+      } else {
+        if let url = NSURL(string:UIApplication.openSettingsURLString) {
+          UIApplication.shared.openURL(url as URL)
+          exit(0)
+        }
+      }
+    }))
+    self.present(locationAlert, animated: true, completion: nil)
   }
   
   func appUpdateAvailable() -> Bool
@@ -87,29 +152,30 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
     //TODO:- Search the photo locally
     let photoStored = GlobalVariables.localStoreService.getPhotoFromLocalStore()
     
-    if photoStored != nil {
-      let photoUrl = photoStored?.photoUrl
-      if photoStored!.isFromToday(){
+    if photoStored != nil && photoStored!.isFromToday(){
+//      print(photoStored?.lastUpdated)
+//      let photoUrl = photoStored?.photoUrl
+//      if photoStored!.isFromToday(){
         self.connectUser(photo: UIImage(data: photoStored?.photoImg as! Data)!)
         self.loadingView.isHidden = false
-      }else{
-        let EditPhoto = UIAlertController (title: NSLocalizedString("Photo update",comment:"Photo update"), message: NSLocalizedString("The photo you are trying to use is not from today. We recommend you to take a new one to have more chance of dating success.", comment:""), preferredStyle: UIAlertController.Style.alert)
-        
-        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take new picture.", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
-          self.camaraPerfilController.sourceType = .camera
-          self.camaraPerfilController.cameraCaptureMode = .photo
-          self.camaraPerfilController.cameraDevice = .front
-          self.present(self.camaraPerfilController, animated: true, completion: nil)
-        }))
-        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Use it", comment:"Use it"), style: UIAlertAction.Style.destructive, handler: { action in
-          GlobalVariables.localStoreService.updateDate()
-          self.connectUser(photo: UIImage(data: photoStored?.photoImg! as! Data)!)
-          self.loadingView.isHidden = false
-        }))
-        self.present(EditPhoto, animated: true, completion: nil)
-      }
+//      }else{
+//        let EditPhoto = UIAlertController (title: NSLocalizedString("Photo update",comment:"Photo update"), message: NSLocalizedString("The photo you are trying to use is not from today. We recommend you to take a new one to have more chance of dating success.", comment:""), preferredStyle: UIAlertController.Style.alert)
+//
+//        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take new picture.", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
+//          self.camaraPerfilController.sourceType = .camera
+//          self.camaraPerfilController.cameraCaptureMode = .photo
+//          self.camaraPerfilController.cameraDevice = .front
+//          self.present(self.camaraPerfilController, animated: true, completion: nil)
+//        }))
+//        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Use it", comment:"Use it"), style: UIAlertAction.Style.destructive, handler: { action in
+//          GlobalVariables.localStoreService.updateDate()
+//          self.connectUser(photo: UIImage(data: photoStored?.photoImg! as! Data)!)
+//          self.loadingView.isHidden = false
+//        }))
+//        self.present(EditPhoto, animated: true, completion: nil)
+//      }
     }else{
-      let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Create profil photo"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertController.Style.alert)
+      let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("Is required you have a photo in the app to allows other user recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
       
       EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
         
@@ -145,7 +211,6 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
       
       if (error == nil) {
         if results?.count != 0{
-          print(results?[0].recordID)
           let recordID = results?[0].recordID
           self.loginContainer.publicCloudDatabase.delete(withRecordID: recordID!, completionHandler: { (record, error) in
             
@@ -155,7 +220,9 @@ class LoginController: UIViewController, UIImagePickerControllerDelegate, UINavi
         self.loginContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
           if error == nil{
             GlobalVariables.userLogged = User(user: record!)
+            GlobalVariables.localStoreService.removeAllObjects(objectType: Photo.self)
             GlobalVariables.localStoreService.saveObjectArray(objects: [Photo(id: UUID().uuidString, photo: photo, lastUpdated: Date())])
+            GlobalVariables.userLogged.userRegister()
             self.loginOk()
           }else{
             print("error \(error.debugDescription)")
@@ -537,3 +604,7 @@ fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePicke
   return input.rawValue
 }
 
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+  return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+}

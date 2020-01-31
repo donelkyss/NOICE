@@ -105,7 +105,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   
   func showLocationError(){
     let locationAlert = UIAlertController (title: NSLocalizedString("Location Error", comment: ""), message: (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" searches the users closer to your position. Please go to Settings, active the Location services and open ", comment: "") + (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" again.", comment: ""), preferredStyle: .alert)
-    locationAlert.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: ""), style: .default, handler: {alerAction in
+    locationAlert.addAction(UIAlertAction(title: NSLocalizedString("Active Location", comment: ""), style: .default, handler: {alerAction in
       if #available(iOS 10.0, *) {
         let settingsURL = URL(string: UIApplication.openSettingsURLString)!
         UIApplication.shared.open(settingsURL, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
@@ -138,36 +138,35 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
           if (results?.count)! > 0{
             var i = 0
             while i < (results?.count)!{
-              //
-              //              let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
-              //              if !bloqueados.contains(GlobalVariables.userLogged.recordID.recordName) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "recordName") as! String){
-              //                print("hereee")
-              //                let usuarioTemp = User(user: results![i])
-              //                usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
-              //                GlobalVariables.usuariosMostrar.append(usuarioTemp)
-              //              }
-              let usuarioTemp = User(user: results![i])
-              GlobalVariables.usuariosMostrar.append(usuarioTemp)
+              let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
+              print(GlobalVariables.userLogged.bloqueados)
+              if !bloqueados.contains(GlobalVariables.userLogged.id) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "id") as! String){
+                print("hereee")
+                let usuarioTemp = User(user: results![i])
+                //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
+                GlobalVariables.usuariosMostrar.append(usuarioTemp)
+              }
+//              let usuarioTemp = User(user: results![i])
+//              GlobalVariables.usuariosMostrar.append(usuarioTemp)
                 // GlobalVariables.usuariosMostrar[i].BuscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
               i += 1
             }
           }
-          
-          if GlobalVariables.usuariosMostrar.count > 0{
-            DispatchQueue.main.async {
+          DispatchQueue.main.async {
+            if GlobalVariables.usuariosMostrar.count > 0{
               let vc = R.storyboard.main.usersConnected()
               self.navigationController?.setNavigationBarHidden(false, animated: true)
               self.navigationController?.show(vc!, sender: nil)
+            }else{
+              self.locationManager.stopUpdatingLocation()
+              let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you. You can go to any bar, disco or recreational places and try again. And please share the app with your friends to grow our community.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
+              alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment:"Settings"), style: UIAlertAction.Style.default, handler: {alerAction in
+                let vc  = R.storyboard.main.profileView()
+                self.navigationController?.setNavigationBarHidden(false, animated: true)
+                self.navigationController?.show(vc!, sender: nil)
+              }))
+              self.present(alertaClose, animated: true, completion: nil)
             }
-          }else{
-            self.locationManager.stopUpdatingLocation()
-            let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you. You can go to any public place and try again. And please share the app with your friends to grow our community.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
-            alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Close", comment:"Cerrar"), style: UIAlertAction.Style.default, handler: {alerAction in
-              let vc  = R.storyboard.main.profileView()
-              self.navigationController?.setNavigationBarHidden(false, animated: true)
-              self.navigationController?.show(vc!, sender: nil)
-            }))
-            self.present(alertaClose, animated: true, completion: nil)
           }
         }else{
           print("ERROR DE CONSULTA " + error.debugDescription)

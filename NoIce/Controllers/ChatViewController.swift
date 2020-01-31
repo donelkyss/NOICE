@@ -37,7 +37,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     messageInputBar.delegate = self
     
     let screenBounds = UIScreen.main.bounds
-    
+
     self.BloUser.isEnabled = false
     //    self.senderId = GlobalVariables.userLogged.Email
     //    self.senderDisplayName = ""
@@ -113,7 +113,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     usersBtn.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 20.0)
     blockUserBtn.setImage(UIImage(named: "bl"), for: UIControl.State())
     blockUserBtn.addTarget(self, action: #selector(showUsers), for: .touchUpInside)
-    topMenu.addSubview(blockUserBtn)
+    //topMenu.addSubview(blockUserBtn)
     
     self.view.addSubview(topMenu)
     
@@ -243,7 +243,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     
     let outgoingAvatarOverlap: CGFloat = 15
     let layout = self.messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
-    layout?.sectionInset = UIEdgeInsets(top: 80, left: 8, bottom: 1, right: 8)
+    layout?.sectionInset = UIEdgeInsets(top: self.messageList.count == 1 ? 80 : 10, left: 8, bottom: 1, right: 8)
     
     // Hide the outgoing avatar and adjust the label alignment to line up with the messages
     layout?.setMessageOutgoingAvatarSize(.zero)

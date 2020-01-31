@@ -40,6 +40,6 @@ extension UsersConnected: UICollectionViewDataSource, UICollectionViewDelegate, 
   }
   
   func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    self.blockUser(userToBlock: GlobalVariables.usuariosMostrar[indexPath.row].cloudId)
+    self.blockUser(userToBlock: GlobalVariables.usuariosMostrar[indexPath.row].id)
   }
 }

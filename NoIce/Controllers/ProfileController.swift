@@ -136,6 +136,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     self.camaraController.cameraDevice = .front
     self.present(self.camaraController, animated: true, completion: nil)
   }
+  
   @IBAction func ShareApp(_ sender: Any) {
     if let name = URL(string: "itms://itunes.apple.com/us/app/apple-store/id1290022053?mt=8") {
       let objectsToShare = [name]

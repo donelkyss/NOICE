@@ -31,7 +31,7 @@ class UserCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelegate{
     self.userPhoto.addShadow()
     self.userPhoto.image = user.photoProfile
     self.newMsg.isHidden = !user.NewMsg
-    self.hideBtn.addBorder()
+    //self.hideBtn.addBorder()
     
     pan = UIPanGestureRecognizer(target: self, action: #selector(onPan(_:)))
     pan.delegate = self

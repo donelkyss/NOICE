@@ -21,6 +21,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
   @IBOutlet var backgroundView: UIView!
   @IBOutlet weak var helpTextView: UITextView!
   @IBOutlet weak var headerView: UIView!
+  @IBOutlet weak var searchingView: UIView!
   
   
   override func viewDidLoad() {
@@ -40,18 +41,12 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    if GlobalVariables.usuariosMostrar.count == 0{
-      let vc = R.storyboard.main.inicioView()
-      self.navigationController?.show(vc!, sender: nil)
-    }else{
-      connectedTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(BuscarUsuariosConectados), userInfo: nil, repeats: true)
-      self.collectionView.reloadData()
-    }
-    
+    //self.buscarUsuariosConectados()
+    connectedTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(buscarUsuariosConectados), userInfo: nil, repeats: true)
   }
   
   //CUSTOM FUNCTIONS
-  @objc func BuscarUsuariosConectados(){
+  @objc func buscarUsuariosConectados(){
     print("buscando")
     let userLoggedReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
     let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",GlobalVariables.userLogged.location, userLoggedReference)
@@ -59,29 +54,53 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
     queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: GlobalVariables.userLogged.location)]
     self.userContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
       if (error == nil) {
+        print("Something \(results?.count)")
         GlobalVariables.usuariosMostrar.removeAll()
         if (results?.count)! > 0{
-          var i = 0
-          while i < (results?.count)!{
-//            let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
-//            if !bloqueados.contains(GlobalVariables.userLogged.cloudId) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "recordName") as! String){
-//              let usuarioTemp = User(user: results![i])
-//              if !GlobalVariables.usuariosMostrar.contains{$0.id == usuarioTemp.id}{
-//                GlobalVariables.usuariosMostrar.append(usuarioTemp)
-//              }
-//              //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
-//              //GlobalVariables.usuariosMostrar.append(usuarioTemp)
-//            }
-            let usuarioTemp = User(user: results![i])
-            if !GlobalVariables.usuariosMostrar.contains{$0.cloudId == usuarioTemp.cloudId}{
-              print("here")
-              GlobalVariables.usuariosMostrar.append(usuarioTemp)
+          print("users found")
+          for userResult in results!{
+            let usuarioTemp = User(user: userResult)
+            //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
+            GlobalVariables.usuariosMostrar.append(usuarioTemp)
+            
+            DispatchQueue.main.async {
+              self.collectionView.reloadData()
+              self.searchingView.isHidden = true
             }
-            //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
-            i += 1
           }
+//          var i = 0
+//          while i < (results?.count)!{
+//            let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
+//            print(GlobalVariables.userLogged.bloqueados)
+//            if !bloqueados.contains(GlobalVariables.userLogged.id) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "id") as! String){
+//              print("hereee")
+//              let usuarioTemp = User(user: results![i])
+//              //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
+//              GlobalVariables.usuariosMostrar.append(usuarioTemp)
+//            }
+//            //            let usuarioTemp = User(user: results![i])
+//            //            if !GlobalVariables.usuariosMostrar.contains{$0.cloudId == usuarioTemp.cloudId}{
+//            //              print("here")
+//            //              GlobalVariables.usuariosMostrar.append(usuarioTemp)
+//            //            }
+//            //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
+//            i += 1
+//          }
           self.BuscarNuevosMSG()
+        }else{
+          DispatchQueue.main.async {
+            let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you. You can go to any bar, disco or recreational places and try again. And please share the app with your friends to grow our community.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
+            alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment:"Settings"), style: UIAlertAction.Style.default, handler: {alerAction in
+              self.connectedTimer.invalidate()
+              let vc  = R.storyboard.main.profileView()
+              self.navigationController?.setNavigationBarHidden(false, animated: true)
+              self.navigationController?.show(vc!, sender: nil)
+            }))
+            self.present(alertaClose, animated: true, completion: nil)
+            
+          }
         }
+       
       }else{
         print("ERROR DE CONSULTA " + error.debugDescription)
       }
@@ -101,7 +120,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
         if (results?.count)! > 0{
           var i = 0
           while i < (GlobalVariables.usuariosMostrar.count){
-            if ((results?.contains{($0.value(forKey: "from") as? CKRecord.Reference)!.recordID.recordName == GlobalVariables.usuariosMostrar[i].id})!) {
+            if ((results?.contains{($0.value(forKey: "from") as? CKRecord.Reference)!.recordID.recordName == GlobalVariables.usuariosMostrar[i].cloudId})!) {
               GlobalVariables.usuariosMostrar[i].NewMsg = true
             }else{
               GlobalVariables.usuariosMostrar[i].NewMsg = false

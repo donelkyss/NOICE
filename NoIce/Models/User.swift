@@ -32,6 +32,7 @@ class User{
       self.photoProfile = UIImage(named: "user")!
     }
     self.cloudId = user.recordID.recordName
+    self.id = user.value(forKey: "id") as? String
     self.location = user.value(forKey: "location") as? CLLocation
     self.bloqueados = user.value(forKey: "bloqueados") as? [String]
     self.NewMsg = false
@@ -56,6 +57,28 @@ class User{
       }
       
     })
+  }
+  
+  func userRegister(){
+    let predicateMesajes = NSPredicate(format: "id == %@", self.id)
+    
+        let queryMSGVista = CKQuery(recordType: "UsersRegistered",predicate: predicateMesajes)
+    
+        self.UserContainer.publicCloudDatabase.perform(queryMSGVista, inZoneWith: nil, completionHandler: ({results, error in
+          if (error == nil) {
+            if (results?.count)! > 0{
+              print("User exist")
+            }else{
+              let recordUser = CKRecord(recordType:"UsersRegistered")
+              recordUser.setObject(self.id as CKRecordValue, forKey: "id")
+              self.UserContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
+                
+              })
+            }
+          }else{
+            print(error.debugDescription)
+          }
+        }))
   }
   
   func desconnect(){
@@ -135,7 +158,6 @@ class User{
 //  }
   
   func ActualizarPhoto(newphoto: UIImage){
-    print("here")
     if !newphoto.isEqual(GlobalVariables.userLogged.photoProfile){
 
       let imagenURL = newphoto.saveImageToFile()
@@ -154,6 +176,8 @@ class User{
             } else {
               self.photoProfile = newphoto
               GlobalVariables.userLogged.photoProfile = newphoto
+              GlobalVariables.localStoreService.removeAllObjects(objectType: Photo.self)
+              GlobalVariables.localStoreService.saveObjectArray(objects: [Photo(id: UUID().uuidString, photo: newphoto, lastUpdated: Date())])
             }
           })
         }
