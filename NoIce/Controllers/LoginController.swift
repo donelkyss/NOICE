@@ -11,6 +11,7 @@ import UIKit
 import CoreLocation
 import CloudKit
 import Vision
+import KeychainSwift
 
 class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   var uuid: String!
@@ -25,10 +26,19 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
   
   override func viewDidLoad(){
     super.viewDidLoad()
-    if let uuid = UIDevice.current.identifierForVendor?.uuidString {
-      self.uuid = uuid
+    
+    let keychain = KeychainSwift()
+    keychain.accessGroup = "48G34LX7UB.www.donelkys.NoIce"
+    if let userId = keychain.get("userId") {
+      self.uuid = userId
+    }else{
+      if let userId = UIDevice.current.identifierForVendor?.uuidString {
+        self.uuid = userId
+        keychain.set(userId, forKey: "userId")
+      }
     }
     
+    print(self.uuid)
     self.locationManager.delegate = self
     self.loadingAnimation.addShadow()
     self.camaraPerfilController = UIImagePickerController()
@@ -76,8 +86,6 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
       if GlobalVariables.userLogged.location.distance(from: locations.last!) > 20{
         GlobalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
       }
-    }else{
-      print("here")
     }
   }
   

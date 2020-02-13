@@ -28,7 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //FBSDKApplicationDelegate.sharedInstance().application( application, didFinishLaunchingWithOptions: launchOptions)
     //return true
-    
+    UIButton.appearance(whenContainedInInstancesOf: [UIView.self]).tintColor = GlobalConstants.primaryColor
+    UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = GlobalConstants.primaryColor
+    UIActivityIndicatorView.appearance().tintColor = GlobalConstants.primaryColor
     return true
   }
   

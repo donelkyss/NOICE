@@ -15,6 +15,7 @@ import CloudKit
 class ChatViewController: MessagesViewController, UINavigationControllerDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
   
   var chatOpenPos: Int!
+  var userSelected: User!
   var MSGTimer : Timer!
   var MSGContainer = CKContainer.default()
   var tap: UITapGestureRecognizer!
@@ -45,7 +46,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     //Hide adjunte button
     //self.inputToolbar.contentView.leftBarButtonItem = nil
     
-    let image = GlobalVariables.usuariosMostrar[self.chatOpenPos].photoProfile
+    let image = self.userSelected.photoProfile
     
     let imgBackground:UIImageView = UIImageView(frame: self.view.bounds)
     imgBackground.image = image
@@ -75,10 +76,10 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     
     self.topMenu.removeFromSuperview()
     self.topMenu = UIView()
-    self.topMenu.frame = CGRect(x: 20, y: self.view.bounds.origin.y + 50, width: screenBounds.width - 40, height: 60)
+    self.topMenu.frame = CGRect(x: 20, y: self.view.bounds.origin.y + 35, width: screenBounds.width - 40, height: 60)
     self.topMenu.layer.cornerRadius = 15
-    self.topMenu.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 0.9)
-    self.topMenu.addShadow()
+    //self.topMenu.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 0.9)
+    //self.topMenu.addShadow()
     
     self.topMenu.tintColor = .black
     
@@ -87,23 +88,26 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     baseTitle.textColor = .darkText
     baseTitle.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
     baseTitle.text = "Chat"
-    topMenu.addSubview(baseTitle)
+    //topMenu.addSubview(baseTitle)
     
     let closeBtn = UIButton(type: UIButton.ButtonType.system)
     closeBtn.frame = CGRect(x: topMenu.frame.width - 40, y: 15, width: 30, height: 30)
     closeBtn.setTitleColor(.black, for: .normal)
     closeBtn.setImage(UIImage(named: "close"), for: UIControl.State())
     closeBtn.addTarget(self, action: #selector(closeApp), for: .touchUpInside)
-    topMenu.addSubview(closeBtn)
+    //topMenu.addSubview(closeBtn)
     
     let usersBtn = UIButton(type: UIButton.ButtonType.system)
-    usersBtn.frame = CGRect(x: 10, y: 15, width: 30, height: 30)
+    usersBtn.frame = CGRect(x: 10, y: 15, width: 40, height: 40)
     usersBtn.setTitleColor(.black, for: .normal)
     //sendReportBtn.setTitle("PREVIOUS", for: .normal)
     //usersBtn.titleLabel?.font = UIFont(name: "Helvetica", size: 20.0)
     //usersBtn.addBorder()
     usersBtn.setImage(UIImage(named: "users"), for: UIControl.State())
     usersBtn.addTarget(self, action: #selector(showUsers), for: .touchUpInside)
+    usersBtn.backgroundColor = .white
+    usersBtn.layer.cornerRadius = 5
+    usersBtn.addShadow()
     topMenu.addSubview(usersBtn)
     
     let blockUserBtn = UIButton(type: UIButton.ButtonType.system)
@@ -170,7 +174,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   //FUNCTION TO SEARCH NEW messageList
   @objc func buscarNewMSG() {
     let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
-    let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.usuariosMostrar[self.chatOpenPos].cloudId), action: .none)
+    let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.userSelected.cloudId), action: .none)
     let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference,fromReference)
     
     let queryVista = CKQuery(recordType: "Messages",predicate: predicateMesajes)
@@ -185,7 +189,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
             self.eliminarMSGRead(record: (results![i].recordID))
             if !self.messageList.contains{$0.id == message.id}{
               self.messageList.append(message)
-              GlobalVariables.usuariosMostrar[self.chatOpenPos].NewMsg = false
+              self.userSelected.NewMsg = false
             }
             
             i += 1
@@ -213,7 +217,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   
   @IBAction func BlockUser(_ sender: Any) {
     self.BloUser.isEnabled = false
-    GlobalVariables.userLogged.ActualizarBloqueo(userToBlock: GlobalVariables.usuariosMostrar[self.chatOpenPos].id){ success in
+    GlobalVariables.userLogged.ActualizarBloqueo(userToBlock: self.userSelected.id){ success in
       if success{
         self.MSGTimer.invalidate()
         GlobalVariables.usuariosMostrar.remove(at: self.chatOpenPos)
@@ -265,66 +269,3 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     self.messagesCollectionView.scrollToBottom(animated: true)
   }
 }
-
-
-
-//    // COLLECTION VIEW FUNCTIONS
-//
-//    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
-//
-//      let bubbleFactory = JSQMessagesBubbleImageFactory()
-//      let message = mensajesMostrados[indexPath.item]
-//      collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
-//      if message.senderId == self.senderId {
-//        return bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
-//      } else {
-//        return bubbleFactory?.incomingMessagesBubbleImage(with: UIColor(red: 102/255, green: 153/255, blue: 255/255, alpha: 1))
-//        //Blue color  red: 141/255, green: 168/255, blue: 217/255, alpha: 1
-//      }
-//
-//    }
-//
-//    override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource!{
-//      let message = mensajesMostrados[indexPath.item]
-//
-//      if message.senderId == self.senderId {
-//        return nil //JSQMessagesAvatarImageFactory.avatarImage(with: GlobalVariables.userLogged.photoProfile, diameter: 70)
-//      } else {
-//        return nil //JSQMessagesAvatarImageFactory.avatarImage(with: GlobalVariables.usuariosMostrar[self.chatOpenPos].photoProfile, diameter: 70)
-//      }
-//
-//    }
-//
-//    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
-//      return mensajesMostrados[indexPath.item]
-//    }
-//
-//    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapCellAt indexPath: IndexPath!, touchLocation: CGPoint) {
-//      self.dismissKeyboard()
-//    }
-//
-//    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
-//
-//      let msg = mensajesMostrados[indexPath.item]
-//      self.dismissKeyboard()
-//      if msg.isMediaMessage {
-//        if let mediaItem = msg.media as? JSQVideoMediaItem {
-//          let player = AVPlayer(url: mediaItem.fileURL)
-//          let playerController = AVPlayerViewController()
-//          playerController.player = player;
-//          self.present(playerController, animated: true, completion: nil)
-//        }
-//      }
-//
-//    }
-//
-//    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//      return mensajesMostrados.count;
-//    }
-//
-//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//      let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
-//      cell.textView.textColor = UIColor.black
-//
-//      return cell
-//    }

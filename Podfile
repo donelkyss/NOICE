@@ -8,4 +8,5 @@ target 'NoIce' do
    pod 'MessageKit'
    pod 'R.swift'
    pod 'RealmSwift'
+   pod 'KeychainSwift'
 end

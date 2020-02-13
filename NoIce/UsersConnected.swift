@@ -14,6 +14,16 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
   
   var userContainer = CKContainer.default()
   var connectedTimer: Timer!
+  var usersConnected: [User] = [] {
+    didSet{
+      if self.usersConnected.count > 0 {
+        DispatchQueue.main.async {
+          self.collectionView.reloadData()
+          self.searchingView.isHidden = true
+        }
+      }
+    }
+  }
   
   //INTERFACES VARIABLES
   @IBOutlet weak var collectionView: UICollectionView!
@@ -22,12 +32,14 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
   @IBOutlet weak var helpTextView: UITextView!
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var searchingView: UIView!
+  @IBOutlet weak var backBtn: UIButton!
   
   
   override func viewDidLoad() {
     super.viewDidLoad()
     self.headerView.addShadow()
     self.helpView.addShadow()
+    self.backBtn.addShadow()
     self.collectionView.reloadSections(IndexSet(integer: 0))
     
     self.navigationController?.setNavigationBarHidden(true, animated: true)
@@ -42,7 +54,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
   
   override func viewWillAppear(_ animated: Bool) {
     //self.buscarUsuariosConectados()
-    connectedTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(buscarUsuariosConectados), userInfo: nil, repeats: true)
+    connectedTimer = Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(buscarUsuariosConectados), userInfo: nil, repeats: true)
   }
   
   //CUSTOM FUNCTIONS
@@ -55,18 +67,18 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
     self.userContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
       if (error == nil) {
         print("Something \(results?.count)")
-        GlobalVariables.usuariosMostrar.removeAll()
+        self.usersConnected.removeAll()
         if (results?.count)! > 0{
           print("users found")
           for userResult in results!{
             let usuarioTemp = User(user: userResult)
             //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
-            GlobalVariables.usuariosMostrar.append(usuarioTemp)
+            self.usersConnected.append(usuarioTemp)
             
-            DispatchQueue.main.async {
-              self.collectionView.reloadData()
-              self.searchingView.isHidden = true
-            }
+//            DispatchQueue.main.async {
+//              self.collectionView.reloadData()
+//              self.searchingView.isHidden = true
+//            }
           }
 //          var i = 0
 //          while i < (results?.count)!{
@@ -76,12 +88,12 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
 //              print("hereee")
 //              let usuarioTemp = User(user: results![i])
 //              //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
-//              GlobalVariables.usuariosMostrar.append(usuarioTemp)
+//              self.usersConnected.append(usuarioTemp)
 //            }
 //            //            let usuarioTemp = User(user: results![i])
-//            //            if !GlobalVariables.usuariosMostrar.contains{$0.cloudId == usuarioTemp.cloudId}{
+//            //            if !self.usersConnected.contains{$0.cloudId == usuarioTemp.cloudId}{
 //            //              print("here")
-//            //              GlobalVariables.usuariosMostrar.append(usuarioTemp)
+//            //              self.usersConnected.append(usuarioTemp)
 //            //            }
 //            //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
 //            i += 1
@@ -119,11 +131,11 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
       if (error == nil) {
         if (results?.count)! > 0{
           var i = 0
-          while i < (GlobalVariables.usuariosMostrar.count){
-            if ((results?.contains{($0.value(forKey: "from") as? CKRecord.Reference)!.recordID.recordName == GlobalVariables.usuariosMostrar[i].cloudId})!) {
-              GlobalVariables.usuariosMostrar[i].NewMsg = true
+          while i < (self.usersConnected.count){
+            if ((results?.contains{($0.value(forKey: "from") as? CKRecord.Reference)!.recordID.recordName == self.usersConnected[i].cloudId})!) {
+              self.usersConnected[i].NewMsg = true
             }else{
-              GlobalVariables.usuariosMostrar[i].NewMsg = false
+              self.usersConnected[i].NewMsg = false
             }
             i += 1
           }
@@ -143,7 +155,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
   func blockUser(userToBlock: String){
     GlobalVariables.userLogged.ActualizarBloqueo(userToBlock: userToBlock, completionHandler: { success in
       if success {
-        GlobalVariables.usuariosMostrar.removeAll{$0.id == userToBlock}
+        self.usersConnected.removeAll{$0.id == userToBlock}
         DispatchQueue.main.async {
           self.collectionView.reloadData()
         }

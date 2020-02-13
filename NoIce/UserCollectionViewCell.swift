@@ -27,6 +27,7 @@ class UserCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelegate{
   }
   
   func initContent(user: User){
+    self.contentView.addShadow()
     self.userConnected = user
     self.userPhoto.addShadow()
     self.userPhoto.image = user.photoProfile

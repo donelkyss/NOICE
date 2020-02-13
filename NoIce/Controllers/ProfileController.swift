@@ -22,6 +22,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
 
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var buttonsView: UIView!
+  @IBOutlet weak var backBtn: UIButton!
   
   
   @IBOutlet weak var userPerfilPhoto: UIImageView!
@@ -32,6 +33,8 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     self.camaraController.delegate = self
     self.headerView.addShadow()
     self.buttonsView.addShadow()
+    self.backBtn.addShadow()
+    self.backBtn.tintColor = GlobalConstants.primaryColor
     
     //Define value for Custom Contrains
     let screenSize = UIScreen.main.bounds

@@ -37,7 +37,7 @@ extension ChatViewController: MessagesLayoutDelegate {
   }
   
   func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-    avatarView.image = message.sender.senderId == GlobalVariables.userLogged.cloudId ? GlobalVariables.userLogged.photoProfile : GlobalVariables.usuariosMostrar[self.chatOpenPos].photoProfile
+    avatarView.image = message.sender.senderId == GlobalVariables.userLogged.cloudId ? GlobalVariables.userLogged.photoProfile : self.userSelected.photoProfile
   }
   
   func footerViewSize(for message: MessageType, at indexPath: IndexPath,
@@ -61,7 +61,11 @@ extension ChatViewController: MessagesDisplayDelegate {
                        in messagesCollectionView: MessagesCollectionView) -> UIColor {
     
     // 1
-    return isFromCurrentSender(message: message) ? UIColor(red: 69/255, green: 193/255, blue: 89/255, alpha: 1) : .green
+    return isFromCurrentSender(message: message) ? GlobalConstants.secundaryColor : GlobalConstants.primaryColor
+  }
+  
+  func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+    return isFromCurrentSender(message: message) ? .black : .white
   }
   
   func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath,
@@ -119,7 +123,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate{
     for component in data {
       let user = Sender(id: GlobalVariables.userLogged.cloudId, displayName: "text")
       if let str = component as? String {
-        let message = Message(from: GlobalVariables.userLogged!.cloudId, to: GlobalVariables.usuariosMostrar[self.chatOpenPos].cloudId, text: str)
+        let message = Message(from: GlobalVariables.userLogged!.cloudId, to: self.userSelected.cloudId, text: str)
         insertNewMessage(message)
       }
 //      } else if let img = component as? UIImage {

@@ -12,14 +12,14 @@ extension UsersConnected: UICollectionViewDataSource, UICollectionViewDelegate, 
   //COLLECTION VIEW FUNCTION
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return GlobalVariables.usuariosMostrar.count
+    return self.usersConnected.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserCell",for: indexPath) as! UserCollectionViewCell
     cell.delegate = self
-    cell.initContent(user: GlobalVariables.usuariosMostrar[indexPath.row])//(image: GlobalVariables.usuariosMostrar[indexPath.row].photoProfile, hidden: !GlobalVariables.usuariosMostrar[indexPath.row].NewMsg)
+    cell.initContent(user: self.usersConnected[indexPath.row])//(image: self.usersConnected[indexPath.row].photoProfile, hidden: !self.usersConnected[indexPath.row].NewMsg)
     cell.userPhoto.layer.cornerRadius = (cell.userPhoto.frame.width) / 8
     cell.userPhoto.contentMode = .scaleAspectFill
     cell.userPhoto.clipsToBounds = true
@@ -35,11 +35,11 @@ extension UsersConnected: UICollectionViewDataSource, UICollectionViewDelegate, 
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let vc = R.storyboard.main.chat()
-    vc!.chatOpenPos = indexPath.row
+    vc!.userSelected = self.usersConnected[indexPath.row]
     self.navigationController?.show(vc!, sender: nil)
   }
   
   func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    self.blockUser(userToBlock: GlobalVariables.usuariosMostrar[indexPath.row].id)
+    self.blockUser(userToBlock: self.usersConnected[indexPath.row].id)
   }
 }
