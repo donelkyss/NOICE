@@ -9,11 +9,14 @@
 import Foundation
 import UIKit
 import CloudKit
+import UserNotifications
 
-class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
+class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   
   var userContainer = CKContainer.default()
   var connectedTimer: Timer!
+  var newUsersSubscriptionID: CKSubscription.ID!
+  var newMessageSubscriptionID: CKSubscription.ID!
   var usersConnected: [User] = [] {
     didSet{
       if self.usersConnected.count > 0 {
@@ -24,6 +27,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
       }
     }
   }
+   var userConnectedNotificationCenter = UNUserNotificationCenter.current()
   
   //INTERFACES VARIABLES
   @IBOutlet weak var collectionView: UICollectionView!
@@ -50,17 +54,43 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
     self.collectionView.addGestureRecognizer(tapGesture)
     
     self.helpTextView.text = NSLocalizedString("Click photo to chat or Slide it to hide and block.", comment: "")
+    
+    print("coudId \(GlobalVariables.userLogged.cloudId)")
+    
+    self.userConnectedNotificationCenter.delegate = self
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    //self.buscarUsuariosConectados()
-    connectedTimer = Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(buscarUsuariosConectados), userInfo: nil, repeats: true)
+    self.buscarUsuariosConectados()
+    //connectedTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(buscarUsuariosConectados), userInfo: nil, repeats: true)
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    if self.newUsersSubscriptionID != nil{
+      self.userContainer.publicCloudDatabase.delete(withSubscriptionID: self.newUsersSubscriptionID, completionHandler: { result, error in
+        if let error = error {
+          print(error.localizedDescription)
+        }else{
+          self.newUsersSubscriptionID = nil
+        }
+      })
+    }
+    
+    if self.newMessageSubscriptionID != nil{
+      self.userContainer.publicCloudDatabase.delete(withSubscriptionID: self.newMessageSubscriptionID, completionHandler: { result, error in
+        if let error = error {
+          print(error.localizedDescription)
+        }else{
+          self.newMessageSubscriptionID = nil
+        }
+      })
+    }
   }
   
   //CUSTOM FUNCTIONS
   @objc func buscarUsuariosConectados(){
     print("buscando")
-    let userLoggedReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
+    let userLoggedReference = CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId)
     let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",GlobalVariables.userLogged.location, userLoggedReference)
     let queryUsuarioIn = CKQuery(recordType: "UsersConnected",predicate: predicateUsuarioIn)
     queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: GlobalVariables.userLogged.location)]
@@ -72,38 +102,17 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
           print("users found")
           for userResult in results!{
             let usuarioTemp = User(user: userResult)
-            //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
             self.usersConnected.append(usuarioTemp)
-            
-//            DispatchQueue.main.async {
-//              self.collectionView.reloadData()
-//              self.searchingView.isHidden = true
-//            }
           }
-//          var i = 0
-//          while i < (results?.count)!{
-//            let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
-//            print(GlobalVariables.userLogged.bloqueados)
-//            if !bloqueados.contains(GlobalVariables.userLogged.id) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "id") as! String){
-//              print("hereee")
-//              let usuarioTemp = User(user: results![i])
-//              //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
-//              self.usersConnected.append(usuarioTemp)
-//            }
-//            //            let usuarioTemp = User(user: results![i])
-//            //            if !self.usersConnected.contains{$0.cloudId == usuarioTemp.cloudId}{
-//            //              print("here")
-//            //              self.usersConnected.append(usuarioTemp)
-//            //            }
-//            //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
-//            i += 1
-//          }
-          self.BuscarNuevosMSG()
+          self.buscarNuevosMSG()
+          self.createNewUsersConnectedSubscription()
+          self.createNewMsgSubscription()
         }else{
+          //self.connectedTimer.invalidate()
           DispatchQueue.main.async {
             let alertaClose = UIAlertController (title: NSLocalizedString("No user connected",comment:"No user connected"), message: NSLocalizedString("There aren't any user connected near you. You can go to any bar, disco or recreational places and try again. And please share the app with your friends to grow our community.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
             alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment:"Settings"), style: UIAlertAction.Style.default, handler: {alerAction in
-              self.connectedTimer.invalidate()
+              //self.connectedTimer.invalidate()
               let vc  = R.storyboard.main.profileView()
               self.navigationController?.setNavigationBarHidden(false, animated: true)
               self.navigationController?.show(vc!, sender: nil)
@@ -120,7 +129,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
     
   }
   
-  func BuscarNuevosMSG() {
+  func buscarNuevosMSG() {
     let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
     //let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.id), action: .none)
     let predicateMesajes = NSPredicate(format: "to == %@",toReference)
@@ -149,7 +158,93 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate {
       }
       
     }))
+  }
+  
+  func createNewUsersConnectedSubscription(){
+    print("working userConnected")
+    //UNUserNotificationCenter.current().delegate = self
+    let predicate = NSPredicate(format:"distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@", GlobalVariables.userLogged.location, CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+    let subscription = CKQuerySubscription(recordType: "UsersConnected", predicate: predicate, options: [.firesOnRecordCreation,.firesOnRecordDeletion])
     
+    let notification = CKSubscription.NotificationInfo()
+    notification.shouldSendContentAvailable = true
+    notification.soundName = "default"
+    subscription.notificationInfo = notification
+    
+    self.userContainer.publicCloudDatabase.save(subscription) { result, error in
+      if let error = error {
+        print(error.localizedDescription)
+      }else{
+        self.newUsersSubscriptionID = result?.subscriptionID
+      }
+    }
+  }
+  
+  func createNewMsgSubscription(){
+    print("working message")
+    let predicate = NSPredicate(format: "to = %@",CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+    let subscription = CKQuerySubscription(recordType: "Messages", predicate: predicate, options: [.firesOnRecordCreation])
+    let notification = CKSubscription.NotificationInfo()
+    notification.soundName = "default"
+    notification.shouldSendContentAvailable = true
+    
+    subscription.notificationInfo = notification
+    
+    self.userContainer.publicCloudDatabase.save(subscription) { result, error in
+      if let error = error {
+        print(error.localizedDescription)
+      }else{
+        self.newMessageSubscriptionID = result?.subscriptionID
+      }
+    }
+  }
+  
+  func updateUsersConnected(userId: String){
+    if self.usersConnected.contains(where: {$0.cloudId == userId}){
+      self.usersConnected.removeAll{$0.cloudId == userId}
+      print("user desconnected")
+    }else{
+      self.userContainer.publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: userId), completionHandler: { (record, error) in
+        if (error == nil) {
+          print("Something \(record?.value(forKey: "id") as! String)")
+            let usuarioTemp = User(user: (record)!)
+            self.usersConnected.append(usuarioTemp)
+          }
+      
+      })
+    }
+  }
+  
+  func getRecordFromSubscription(recordName: String){
+    let index = self.usersConnected.firstIndex(where: {$0.cloudId == recordName})
+    print("index \(index)")
+    if index != nil{
+      self.usersConnected.remove(at: index!)
+      print("user desconnected")
+    }else{
+      self.userContainer.publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: recordName), completionHandler: { (record, error) in
+        if (error == nil) {
+          if (record?.value(forKey: "recordType") as! String) == "Messages"{
+            let newMessage = Message(newMessage: record!)
+            if newMessage.to == GlobalVariables.userLogged.cloudId{
+              let userIndex = self.usersConnected.firstIndex(where: {$0.cloudId == newMessage.from})
+              self.usersConnected[userIndex!].NewMsg = true
+              DispatchQueue.main.async {
+                self.collectionView.reloadData()
+              }
+            }
+          }else{
+            print("new user connected")
+            let usuarioTemp = User(user: (record)!)
+            if !self.usersConnected.contains(where: {$0.cloudId == usuarioTemp.cloudId}){
+              self.usersConnected.append(usuarioTemp)
+            }
+            //self.usersConnected.removeDupl
+            print(self.usersConnected)
+          }
+        }
+      })
+    }
   }
   
   func blockUser(userToBlock: String){

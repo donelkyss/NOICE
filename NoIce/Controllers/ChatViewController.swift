@@ -11,19 +11,26 @@ import MessageKit
 import MobileCoreServices
 import AVKit
 import CloudKit
+import UserNotifications
 
 class ChatViewController: MessagesViewController, UINavigationControllerDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
   
   var chatOpenPos: Int!
   var userSelected: User!
   var MSGTimer : Timer!
-  var MSGContainer = CKContainer.default()
+  var chatContainer = CKContainer.default()
+  var newMessageSubscriptionID: CKSubscription.ID!
+  var newUsersSubscriptionID: CKSubscription.ID!
   var tap: UITapGestureRecognizer!
   var topMenu = UIView()
+  
+  let screenBounds = UIScreen.main.bounds
   
   var messageList: [Message] = []
   
   var firstMessage = true
+  
+  var userMessageNotificationCenter = UNUserNotificationCenter.current()
   
   @IBOutlet weak var BloUser: UIBarButtonItem!
   
@@ -36,8 +43,6 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     messagesCollectionView.messagesDisplayDelegate = self
     messagesCollectionView.messageCellDelegate = self
     messageInputBar.delegate = self
-    
-    let screenBounds = UIScreen.main.bounds
 
     self.BloUser.isEnabled = false
     //    self.senderId = GlobalVariables.userLogged.Email
@@ -61,7 +66,6 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     //Descomentar, si el tap no debe interferir o cancelar otras acciones
     //tap.cancelsTouchesInView = false
     
-    //Tab bar User Photo
     let navController = navigationController!
     let bannerHeight = navController.navigationBar.frame.size.height
     let logoContainer = UIView(frame: CGRect(x: 0, y: 1, width: bannerHeight-2, height: bannerHeight-2))
@@ -74,6 +78,35 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     logoContainer.addSubview(imageView)
     navigationItem.titleView = logoContainer
     
+    self.createTopMenu()
+    
+    self.userMessageNotificationCenter.delegate = self
+    
+    self.createNewUsersConnectedSubscription()
+    self.createNewMsgSubscription()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    self.buscarNewMSG()
+    //MSGTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(buscarNewMSG), userInfo: nil, repeats: true)
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    //self.MSGTimer.invalidate()
+    if self.newMessageSubscriptionID != nil{
+      self.chatContainer.publicCloudDatabase.delete(withSubscriptionID: self.newMessageSubscriptionID, completionHandler: { result, error in
+        if let error = error {
+          print(error.localizedDescription)
+        }else{
+          self.newMessageSubscriptionID = nil
+        }
+      })
+    }
+  }
+  
+  // MARK: - Helpers
+  
+  func createTopMenu(){
     self.topMenu.removeFromSuperview()
     self.topMenu = UIView()
     self.topMenu.frame = CGRect(x: 20, y: self.view.bounds.origin.y + 35, width: screenBounds.width - 40, height: 60)
@@ -115,24 +148,12 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     blockUserBtn.setTitleColor(.red, for: .normal)
     blockUserBtn.setTitle("Block", for: .normal)
     usersBtn.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 20.0)
-    blockUserBtn.setImage(UIImage(named: "bl"), for: UIControl.State())
+    //blockUserBtn.setImage(UIImage(named: "bl"), for: UIControl.State())
     blockUserBtn.addTarget(self, action: #selector(showUsers), for: .touchUpInside)
     //topMenu.addSubview(blockUserBtn)
     
     self.view.addSubview(topMenu)
-    
   }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    self.buscarNewMSG()
-    MSGTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(buscarNewMSG), userInfo: nil, repeats: true)
-  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    self.MSGTimer.invalidate()
-  }
-  
-  // MARK: - Helpers
   
   func insertNewMessage(_ message: Message) {
     self.configureMessageCollectionView()
@@ -153,12 +174,81 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     
   }
   
+  func createNewUsersConnectedSubscription(){
+    let predicate = NSPredicate(format:"recordID = %@",CKRecord.ID(recordName: self.userSelected.cloudId))
+    let subscription = CKQuerySubscription(recordType: "UsersConnected", predicate: predicate, options: [.firesOnRecordCreation,.firesOnRecordDeletion])
+    
+    let notification = CKSubscription.NotificationInfo()
+    notification.shouldSendContentAvailable = true
+    notification.soundName = "default"
+    subscription.notificationInfo = notification
+    
+    self.chatContainer.publicCloudDatabase.save(subscription) { result, error in
+      if let error = error {
+        print(error.localizedDescription)
+      }else{
+        self.newUsersSubscriptionID = result?.subscriptionID
+      }
+    }
+  }
   
+  func createNewMsgSubscription(){
+    print("creating chat message subscription")
+    let predicate =  NSPredicate(format: "from == %@ and to == %@",CKRecord.ID(recordName: self.userSelected.cloudId),CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+    let subscription = CKQuerySubscription(recordType: "Messages", predicate: predicate, options: [.firesOnRecordCreation])
+    
+    let notification = CKSubscription.NotificationInfo()
+    notification.soundName = "default"
+    notification.shouldSendContentAvailable = true
+    subscription.notificationInfo = notification
+    
+    self.chatContainer.publicCloudDatabase.save(subscription) { result, error in
+      if let error = error {
+        print(error.localizedDescription)
+      }else{
+        self.newMessageSubscriptionID = result?.subscriptionID
+      }
+    }
+  }
+  
+  func getRecordFromSubscription(recordName: String){
+    if self.userSelected.cloudId == recordName{
+      DispatchQueue.main.async {
+        let alertaClose = UIAlertController (title: NSLocalizedString("User disconnected",comment:"No user connected"), message: NSLocalizedString("The user you are chatting with has disconnected.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
+        alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Find other users connected", comment:"Settings"), style: UIAlertAction.Style.default, handler: {alerAction in
+          //self.connectedTimer.invalidate()
+          let vc  = R.storyboard.main.usersConnected()
+          self.navigationController?.setNavigationBarHidden(false, animated: true)
+          self.navigationController?.show(vc!, sender: nil)
+        }))
+        self.present(alertaClose, animated: true, completion: nil)
+        
+      }
+    }else{
+      self.chatContainer.publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: recordName), completionHandler: { (record, error) in
+        if (error == nil) {
+          if (record?.value(forKey: "recordType") as! String) == "Messages"{
+            
+            let newMessage = Message(newMessage: record!)
+            if newMessage.to == GlobalVariables.userLogged.cloudId{
+              self.messageList.append(newMessage)
+              DispatchQueue.main.async {
+                self.configureMessageCollectionView()
+                self.messagesCollectionView.reloadData()
+                self.messagesCollectionView.scrollToBottom(animated: true)
+              }
+            }
+          }else{
+            
+          }
+        }
+      })
+    }
+  }
   
   // END COLLECTION VIEW FUNCTIONS
   @objc func dismissKeyboard() {
     //Las vistas y toda la jerarquía renuncia a responder, para esconder el teclado
-    print("here")
     messageInputBar.inputTextView.resignFirstResponder()
   }
   
@@ -179,10 +269,9 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     
     let queryVista = CKQuery(recordType: "Messages",predicate: predicateMesajes)
     queryVista.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-    self.MSGContainer.publicCloudDatabase.perform(queryVista, inZoneWith: nil, completionHandler: ({results, error in
+    self.chatContainer.publicCloudDatabase.perform(queryVista, inZoneWith: nil, completionHandler: ({results, error in
       if (error == nil) {
         if (results!.count) > 0{
-          //self.messageList.removeAll()
           var i = 0
           while i < (results!.count){
             let message = Message(newMessage: results![i])
@@ -230,7 +319,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   }
   
   func eliminarMSGRead(record : CKRecord.ID) {
-    self.MSGContainer.publicCloudDatabase.delete(withRecordID: record, completionHandler: {results, error in
+    self.chatContainer.publicCloudDatabase.delete(withRecordID: record, completionHandler: {results, error in
       if error == nil{
         
       }else{

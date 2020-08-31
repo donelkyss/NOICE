@@ -43,6 +43,7 @@
 		C68C1FEE22AC03EB00E2D18B /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68C1FED22AC03EB00E2D18B /* ChatController.swift */; };
 		C68C1FF122ACA93A00E2D18B /* MessageKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68C1FF022ACA93A00E2D18B /* MessageKind.swift */; };
 		C68C1FF422AD63C300E2D18B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C68C1FF322AD63C300E2D18B /* UIColor.swift */; };
+		C69355D324E9D7C600E360EC /* UserNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69355D224E9D7C600E360EC /* UserNotificationService.swift */; };
 		C693C93A2318D1400078CDA1 /* LocalStoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C693C9392318D1400078CDA1 /* LocalStoreService.swift */; };
 		C693C93C2318D3C80078CDA1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C693C93B2318D3C80078CDA1 /* Photo.swift */; };
 		C6A0031A22E021AA0086DCB5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A0031922E021AA0086DCB5 /* UIView.swift */; };
@@ -106,6 +107,7 @@
 		C68C1FED22AC03EB00E2D18B /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		C68C1FF022ACA93A00E2D18B /* MessageKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageKind.swift; sourceTree = "<group>"; };
 		C68C1FF322AD63C300E2D18B /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		C69355D224E9D7C600E360EC /* UserNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationService.swift; sourceTree = "<group>"; };
 		C693C9392318D1400078CDA1 /* LocalStoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStoreService.swift; sourceTree = "<group>"; };
 		C693C93B2318D3C80078CDA1 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		C6A0031922E021AA0086DCB5 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				AF316D0E1F92A6A900F74FE6 /* user.png */,
 				B5D9DB161F4F88F5009955B9 /* DesignableX */,
 				B57B4EB81E50F993003FAF01 /* Controllers */,
+				C69355D124E9D77200E360EC /* Services */,
 				B5938CD51E4CFE8B00FFD6C5 /* Views */,
 				B58DC2D91E2FCBBB0038BBE2 /* NoIce.entitlements */,
 				B5DCAE5B1E292770000C1325 /* AppDelegate.swift */,
@@ -275,6 +278,14 @@
 				C654619823240EAC00B7687B /* UIButton.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C69355D124E9D77200E360EC /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C69355D224E9D7C600E360EC /* UserNotificationService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		C6CFD8CA22906D8500946818 /* Constants */ = {
@@ -461,7 +472,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -485,6 +496,7 @@
 				B5D9DB251F4F892E009955B9 /* UITextFieldX.swift in Sources */,
 				C6016AA322BFCCB800251B60 /* User.swift in Sources */,
 				B5DCAE5E1E292770000C1325 /* InicioController.swift in Sources */,
+				C69355D324E9D7C600E360EC /* UserNotificationService.swift in Sources */,
 				C693C93C2318D3C80078CDA1 /* Photo.swift in Sources */,
 				C6B437E2216F1242001F545F /* UsersConnected.swift in Sources */,
 				B5D9DB291F4F892E009955B9 /* UIViewXRadialGradient.swift in Sources */,
@@ -690,7 +702,7 @@
 				INFOPLIST_FILE = NoIce/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = www.donelkys.NoIce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -712,7 +724,7 @@
 				INFOPLIST_FILE = NoIce/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = www.donelkys.NoIce;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

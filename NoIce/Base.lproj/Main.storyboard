@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ufB-ub-qpE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ufB-ub-qpE">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -183,7 +183,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="2UL-mZ-kdd"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                                 <state key="normal" title="Edit Photo"/>
                                                 <connections>
                                                     <action selector="EditPhoto:" destination="24q-gZ-uk4" eventType="touchUpInside" id="Pwv-5H-tMz"/>
@@ -194,7 +194,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="Mcd-3M-QTd"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                                 <state key="normal" title="Share"/>
                                                 <connections>
                                                     <action selector="ShareApp:" destination="24q-gZ-uk4" eventType="touchUpInside" id="gRM-z3-6qU"/>
@@ -205,7 +205,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="w5a-2O-uV7"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                                 <state key="normal" title="Close"/>
                                                 <connections>
                                                     <action selector="SignOut:" destination="24q-gZ-uk4" eventType="touchUpInside" id="O00-g6-6zz"/>
@@ -657,12 +657,30 @@
                                             <constraint firstAttribute="width" secondItem="dIe-P6-hah" secondAttribute="height" multiplier="138:83" constant="59.855421686746979" id="rxz-mO-VXA"/>
                                         </constraints>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meet someone you are looking at NOW" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="heZ-ro-wjJ">
+                                        <rect key="frame" x="20" y="712" width="335" height="40"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="dUU-oA-Uxm"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="textColor" red="0.6541457772" green="0.24768573050000001" blue="0.23526361579999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.CornerRadius">
+                                                <integer key="value" value="15"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="oUK-5D-6xF" firstAttribute="leading" secondItem="TLl-w8-ZmX" secondAttribute="leading" id="DYv-Hd-fgP"/>
+                                    <constraint firstItem="heZ-ro-wjJ" firstAttribute="leading" secondItem="TLl-w8-ZmX" secondAttribute="leading" constant="20" id="M8G-Dg-4fc"/>
                                     <constraint firstAttribute="bottom" secondItem="oUK-5D-6xF" secondAttribute="bottom" id="P1d-Sj-O9c"/>
                                     <constraint firstItem="dIe-P6-hah" firstAttribute="leading" secondItem="TLl-w8-ZmX" secondAttribute="leading" id="RSo-oM-7vJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="heZ-ro-wjJ" secondAttribute="bottom" constant="60" id="Shi-WL-c4N"/>
                                     <constraint firstAttribute="trailing" secondItem="dIe-P6-hah" secondAttribute="trailing" id="WZo-sq-HVq"/>
+                                    <constraint firstAttribute="trailing" secondItem="heZ-ro-wjJ" secondAttribute="trailing" constant="20" id="orJ-AK-Q8A"/>
                                     <constraint firstAttribute="trailing" secondItem="oUK-5D-6xF" secondAttribute="trailing" id="sh0-PA-JwF"/>
                                     <constraint firstItem="oUK-5D-6xF" firstAttribute="top" secondItem="TLl-w8-ZmX" secondAttribute="top" constant="-8" id="svj-Pv-6f1"/>
                                     <constraint firstItem="dIe-P6-hah" firstAttribute="top" secondItem="TLl-w8-ZmX" secondAttribute="centerY" constant="-39" id="uC2-GM-J1m"/>
@@ -747,6 +765,7 @@
                         <outlet property="loadingAnimation" destination="FF1-Vu-DVK" id="RuM-7z-a0J"/>
                         <outlet property="loadingView" destination="wQF-yG-4dW" id="IZe-3c-O3i"/>
                         <outlet property="loginView" destination="TLl-w8-ZmX" id="q1z-YZ-bR2"/>
+                        <outlet property="sloganText" destination="heZ-ro-wjJ" id="h0C-kc-oya"/>
                         <segue destination="BYZ-38-t0r" kind="show" id="PIA-P4-RuU"/>
                     </connections>
                 </viewController>
@@ -815,6 +834,11 @@
             <point key="canvasLocation" x="2132" y="-337"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ff7-VR-keq"/>
+        <segue reference="DcV-Oe-aMa"/>
+    </inferredMetricsTieBreakers>
+    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
         <image name="background" width="735" height="1325"/>
         <image name="close" width="28" height="28"/>
@@ -826,9 +850,4 @@
         <image name="user.png" width="512" height="512"/>
         <image name="users" width="40" height="40"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="Ff7-VR-keq"/>
-        <segue reference="DcV-Oe-aMa"/>
-    </inferredMetricsTieBreakers>
-    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

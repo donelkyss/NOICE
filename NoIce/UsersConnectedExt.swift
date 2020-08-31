@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import UserNotifications
 
 extension UsersConnected: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
   //COLLECTION VIEW FUNCTION
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    print(self.usersConnected.count)
     return self.usersConnected.count
   }
   
@@ -42,4 +44,28 @@ extension UsersConnected: UICollectionViewDataSource, UICollectionViewDelegate, 
   func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     self.blockUser(userToBlock: self.usersConnected[indexPath.row].id)
   }
+}
+
+extension UsersConnected: UNUserNotificationCenterDelegate{
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    print("notification here \(response.notification.request.content)")
+  }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    print(notification.request.content)
+    guard let responseData = notification.request.content.userInfo["ck"] as? [String: AnyObject]else {
+      //completionHandler(.failed)
+      return
+    }
+   
+    guard let user = responseData["qry"] as? [String: AnyObject]else {
+      //completionHandler(.failed)
+      return
+    }
+    print("here \(user["rid"])")
+    self.getRecordFromSubscription(recordName: (user["rid"] as? String)!)
+    //self.updateUsersConnected(userId: (user["rid"] as? String)!)
+    completionHandler([.alert, .sound, .badge])
+  }
+  
 }

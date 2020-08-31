@@ -187,7 +187,7 @@ class User{
     }
   }
   
-//  func BuscarNuevosMSG(userDestino: String) {
+//  func buscarNuevosMSG(userDestino: String) {
 //    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: userDestino), action: .none)
 //    let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.cloudId), action: .none)
 //    let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference, fromReference)

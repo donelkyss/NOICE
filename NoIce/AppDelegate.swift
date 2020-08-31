@@ -9,9 +9,10 @@
 import UIKit
 import CoreData
 import CloudKit
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
   
   var window: UIWindow?
   var Appcontainer = CKContainer.default()
@@ -23,14 +24,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     //Avoid lock screen when app is open
     application.isIdleTimerDisabled = true
-    //GMSServices.provideAPIKey("AIzaSyBnKURUhbBUr74PbpPgtPA1driuRaTShGo")
     // Override point for customization after application launch.
     
-    //FBSDKApplicationDelegate.sharedInstance().application( application, didFinishLaunchingWithOptions: launchOptions)
-    //return true
     UIButton.appearance(whenContainedInInstancesOf: [UIView.self]).tintColor = GlobalConstants.primaryColor
     UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = GlobalConstants.primaryColor
     UIActivityIndicatorView.appearance().tintColor = GlobalConstants.primaryColor
+    //application.unregisterForRemoteNotifications()
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge]) { granted, error in
+      if let error = error {
+        print("D'oh: \(error.localizedDescription)")
+      } else {
+        DispatchQueue.main.async {
+          application.registerForRemoteNotifications()
+        }
+      }
+    }
+    //UNUserNotificationCenter.current().delegate = self
+    
     return true
   }
   
@@ -60,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
     return true
-    //return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
   }
   
   func applicationWillResignActive(_ application: UIApplication) {
@@ -105,10 +114,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func applicationDidBecomeActive(_ application: UIApplication) {
     //GlobalVariables.socketConexion.connect()
-    /*if GlobalVariables.userLogged != nil{
-     GlobalVariables.userLogged.ActualizarConectado(estado: "1")
-     sleep(2)
-     }*/
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
   }
   
@@ -116,12 +121,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     //self.saveContext()
+    application.unregisterForRemoteNotifications()
     if GlobalVariables.userLogged != nil{
       GlobalVariables.userLogged.desconnect()
       sleep(2)
     }
   }
-  
+//
+//  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+//    print("notification here \(response.notification.request.content)")
+//  }
+//
+//  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+//    guard let responseData = notification.request.content.userInfo["ck"] as? [String: AnyObject]else {
+//      //completionHandler(.failed)
+//      return
+//    }
+//
+//    guard let user = responseData["qry"] as? [String: AnyObject]else {
+//      //completionHandler(.failed)
+//      return
+//    }
+//    print("here \(user["rid"])")
+//    let vc  = R.storyboard.main.usersConnected()
+//    vc?.updateUsersConnected(userId: (user["rid"] as? String)!)
+//    completionHandler([.alert, .sound, .badge])
+//  }
   
 }
 

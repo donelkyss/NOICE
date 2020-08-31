@@ -23,9 +23,16 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
   @IBOutlet weak var loginView: UIView!
   @IBOutlet weak var loadingView: UIView!
   @IBOutlet weak var loadingAnimation: UIView!
+  @IBOutlet weak var sloganText: UILabel!
   
   override func viewDidLoad(){
     super.viewDidLoad()
+    
+    self.locationManager.delegate = self
+    self.loadingAnimation.addShadow()
+    self.sloganText.addShadow()
+    self.sloganText.clipsToBounds = true
+    self.sloganText.layer.cornerRadius = 10
     
     let keychain = KeychainSwift()
     keychain.accessGroup = "48G34LX7UB.www.donelkys.NoIce"
@@ -38,9 +45,13 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
       }
     }
     
+    if let tempLocation = self.locationManager.location{
+      GlobalVariables.currentPosition = tempLocation
+    }else{
+      self.locationManager.requestWhenInUseAuthorization()
+    }
+    
     print(self.uuid)
-    self.locationManager.delegate = self
-    self.loadingAnimation.addShadow()
     self.camaraPerfilController = UIImagePickerController()
     self.camaraPerfilController.delegate = self
     
@@ -56,6 +67,14 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
       self.present(alertaVersion, animated: true, completion: nil)
       
     }
+    
+    UNUserNotificationCenter.current().getNotificationSettings{ settings in
+      guard settings.authorizationStatus == .authorized else { return }
+      DispatchQueue.main.async {
+        UIApplication.shared.registerForRemoteNotifications()
+      }
+    }
+    
     self.getUserPhoto()
   }
   
@@ -69,7 +88,6 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
       case .restricted, .denied:
         self.showLocationError()
       case .authorizedAlways, .authorizedWhenInUse:
-        //self.TimerStart(estado: 1)
         self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         self.locationManager.startUpdatingLocation()
         break
@@ -85,6 +103,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
     if GlobalVariables.userLogged != nil && CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
       if GlobalVariables.userLogged.location.distance(from: locations.last!) > 20{
         GlobalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
+        GlobalVariables.currentPosition = locations.last!
       }
     }
   }
@@ -96,7 +115,6 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
     case .restricted, .denied:
       self.showLocationError()
     case .authorizedAlways, .authorizedWhenInUse:
-      //self.TimerStart(estado: 1)
       self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       self.locationManager.startUpdatingLocation()
       break
@@ -161,29 +179,11 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
     let photoStored = GlobalVariables.localStoreService.getPhotoFromLocalStore()
     
     if photoStored != nil && photoStored!.isFromToday(){
-//      print(photoStored?.lastUpdated)
-//      let photoUrl = photoStored?.photoUrl
-//      if photoStored!.isFromToday(){
         self.connectUser(photo: UIImage(data: photoStored?.photoImg as! Data)!)
         self.loadingView.isHidden = false
-//      }else{
-//        let EditPhoto = UIAlertController (title: NSLocalizedString("Photo update",comment:"Photo update"), message: NSLocalizedString("The photo you are trying to use is not from today. We recommend you to take a new one to have more chance of dating success.", comment:""), preferredStyle: UIAlertController.Style.alert)
-//
-//        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take new picture.", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
-//          self.camaraPerfilController.sourceType = .camera
-//          self.camaraPerfilController.cameraCaptureMode = .photo
-//          self.camaraPerfilController.cameraDevice = .front
-//          self.present(self.camaraPerfilController, animated: true, completion: nil)
-//        }))
-//        EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Use it", comment:"Use it"), style: UIAlertAction.Style.destructive, handler: { action in
-//          GlobalVariables.localStoreService.updateDate()
-//          self.connectUser(photo: UIImage(data: photoStored?.photoImg! as! Data)!)
-//          self.loadingView.isHidden = false
-//        }))
-//        self.present(EditPhoto, animated: true, completion: nil)
-//      }
+
     }else{
-      let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("Is required you have a photo in the app to allows other user recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
+      let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) only requires you a photo to allows other users recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
       
       EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
         
@@ -210,12 +210,12 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
     recordUser.setObject(photoContenido as CKRecordValue, forKey: "photo")
     recordUser.setObject(["nadie"] as CKRecordValue, forKey: "bloqueados")
     recordUser.setObject(GlobalVariables.currentPosition as CKRecordValue, forKey: "location")
+    print(GlobalVariables.currentPosition)
+    let predicateBriceVista = NSPredicate(format: "id == %@", self.uuid)
     
-    let predicateKapsuleVista = NSPredicate(format: "id == %@", self.uuid)
+    let queryBriceVista = CKQuery(recordType: "UsersConnected",predicate: predicateBriceVista)
     
-    let queryKapsuleVista = CKQuery(recordType: "UsersConnected",predicate: predicateKapsuleVista)
-    
-    self.loginContainer.publicCloudDatabase.perform(queryKapsuleVista, inZoneWith: nil, completionHandler: ({results, error in
+    self.loginContainer.publicCloudDatabase.perform(queryBriceVista, inZoneWith: nil, completionHandler: ({results, error in
       
       if (error == nil) {
         if results?.count != 0{

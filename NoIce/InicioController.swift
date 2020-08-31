@@ -124,7 +124,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   //MARK: - BUSCAR USUARIOS CONECTADOS
   //MEJORAR ESTA FUNCION CAMBIAR EL CICLO FOR:
   @objc func BuscarUsuariosConectados(){
-    
+    print("creating query")
     if GlobalVariables.userLogged.location != GlobalVariables.currentPosition {
       let userLoggedReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
       let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",GlobalVariables.userLogged.location, userLoggedReference)
@@ -133,22 +133,21 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
       queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: GlobalVariables.userLogged.location)]
       self.cloudContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
         if (error == nil) {
-          
+          print("getting query result")
           GlobalVariables.usuariosMostrar.removeAll()
           if (results?.count)! > 0{
             var i = 0
             while i < (results?.count)!{
               let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
-              print(GlobalVariables.userLogged.bloqueados)
               if !bloqueados.contains(GlobalVariables.userLogged.id) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "id") as! String){
                 print("hereee")
                 let usuarioTemp = User(user: results![i])
-                //usuarioTemp.BuscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
+                //usuarioTemp.buscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
                 GlobalVariables.usuariosMostrar.append(usuarioTemp)
               }
 //              let usuarioTemp = User(user: results![i])
 //              GlobalVariables.usuariosMostrar.append(usuarioTemp)
-                // GlobalVariables.usuariosMostrar[i].BuscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
+                // GlobalVariables.usuariosMostrar[i].buscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
               i += 1
             }
           }
