@@ -20,13 +20,13 @@
 
 "No" = "No";
 
-"Profile photo" = "Foto de perfil";
+"Face photo" = "Foto de perfil";
 
-"Is required you have a photo in your profile. Take a profile photo." = "Es necesario tener una foto de perfil. Hágase un selfie para su perfil";
+"only requires you a photo to allows other users recognize you. Please take photo to you face." = "Es necesario tener una foto de perfil para ser encontrado por otros usuarios. Hágase un selfie para su perfil";
 
 "Take a photo" = "Hacer foto";
 
-"Close" = "Cerrar";
+"Cancel" = "Cancelar";
 
 "The profile only accepts selfies photo." = "El perfil solo acepta una foto tomada con la cámara frontal.";
 
@@ -45,3 +45,13 @@
 " again." = ".";
 
 "Click photo to chat or Slide it to hide and block." = "Click sobre la foto para chatear o desplaza para ocultar y bloquear.";
+
+"User disconnected" = "Usuario desconectado";
+
+"The user were chatting with you has disconnected." = "El usuario que chateaba con usted se ha desconectado";
+
+"Find other users connected" = "Buscar otros usuario conectados";
+
+"There aren't any user connected near you. You can go to any bar, disco or recreational places and try again. And please share the app with your friends to grow our community." = "No hay usuarios conectados cerca de usted. Se recomienda ir a un bar, una discoteca o algún otro lugar social. Por favor, comparta la aplicación con sus amigos para hacer crecer esta comunidad.";
+
+"heZ-ro-wjJ.text" = "Conoce a esa personas que estás mirando ahora mismo.";

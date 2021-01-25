@@ -389,7 +389,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
   
   @IBAction func loginUser(_ sender: Any) {
     
-    let EditPhoto = UIAlertController (title: NSLocalizedString("Profile photo",comment:"Create profil photo"), message: NSLocalizedString("Is required you have a photo in your profile. Take a profile picture.", comment:""), preferredStyle: UIAlertController.Style.alert)
+    let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) only requires you a photo to allows other users recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
     
     EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
       

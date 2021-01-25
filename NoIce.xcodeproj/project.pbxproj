@@ -34,7 +34,6 @@
 		B5E640F1D81F02D5080DB85F /* Pods_NoIce.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54835704C69F3ADD43B0445 /* Pods_NoIce.framework */; };
 		C6016AA322BFCCB800251B60 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6016AA222BFCCB700251B60 /* User.swift */; };
 		C6170EA3217BFCB900BAB4E1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C6170EA5217BFCB900BAB4E1 /* InfoPlist.strings */; };
-		C618D37B225994880003E9B5 /* LoginControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C618D37A225994880003E9B5 /* LoginControllerExtension.swift */; };
 		C622ADDE22BEE39C00A7833E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59F9A8C1E30013B00FECA5F /* CloudKit.framework */; };
 		C65461972320C3C800B7687B /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C65461962320C3C800B7687B /* UIImage.swift */; };
 		C654619923240EAC00B7687B /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C654619823240EAC00B7687B /* UIButton.swift */; };
@@ -98,7 +97,6 @@
 		C6170EA2217BFC7000BAB4E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C6170EA4217BFCB900BAB4E1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C6170EA6217BFCD000BAB4E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		C618D37A225994880003E9B5 /* LoginControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginControllerExtension.swift; sourceTree = "<group>"; };
 		C65461962320C3C800B7687B /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		C654619823240EAC00B7687B /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		C65F9F2D229C3C9100E3E304 /* ChatViewControllerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewControllerExt.swift; sourceTree = "<group>"; };
@@ -242,7 +240,6 @@
 		C618D3792259944E0003E9B5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C618D37A225994880003E9B5 /* LoginControllerExtension.swift */,
 				C65F9F2D229C3C9100E3E304 /* ChatViewControllerExt.swift */,
 				C68C1FEB22A8AD9B00E2D18B /* UsersConnectedExt.swift */,
 			);
@@ -348,7 +345,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "Done Santana";
 				TargetAttributes = {
 					B5DCAE571E292770000C1325 = {
@@ -500,7 +497,6 @@
 				C693C93C2318D3C80078CDA1 /* Photo.swift in Sources */,
 				C6B437E2216F1242001F545F /* UsersConnected.swift in Sources */,
 				B5D9DB291F4F892E009955B9 /* UIViewXRadialGradient.swift in Sources */,
-				C618D37B225994880003E9B5 /* LoginControllerExtension.swift in Sources */,
 				C693C93A2318D1400078CDA1 /* LocalStoreService.swift in Sources */,
 				C68C1FEE22AC03EB00E2D18B /* ChatController.swift in Sources */,
 				C6B437E4216F9A7C001F545F /* UserCollectionViewCell.swift in Sources */,
@@ -602,6 +598,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -626,7 +623,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -660,6 +657,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -678,7 +676,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
@@ -700,7 +698,7 @@
 					"$(PROJECT_DIR)/build/Release-iphoneos/JSQMessagesViewController",
 				);
 				INFOPLIST_FILE = NoIce/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = www.donelkys.NoIce;
@@ -722,7 +720,7 @@
 					"$(PROJECT_DIR)/build/Release-iphoneos/JSQMessagesViewController",
 				);
 				INFOPLIST_FILE = NoIce/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = www.donelkys.NoIce;

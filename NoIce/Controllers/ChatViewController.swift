@@ -214,7 +214,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   func getRecordFromSubscription(recordName: String){
     if self.userSelected.cloudId == recordName{
       DispatchQueue.main.async {
-        let alertaClose = UIAlertController (title: NSLocalizedString("User disconnected",comment:"No user connected"), message: NSLocalizedString("The user you are chatting with has disconnected.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
+        let alertaClose = UIAlertController (title: NSLocalizedString("User disconnected",comment:"No user connected"), message: NSLocalizedString("The user were chatting with you has disconnected.", comment:"No user connected"), preferredStyle: UIAlertController.Style.alert)
         alertaClose.addAction(UIAlertAction(title: NSLocalizedString("Find other users connected", comment:"Settings"), style: UIAlertAction.Style.default, handler: {alerAction in
           //self.connectedTimer.invalidate()
           let vc  = R.storyboard.main.usersConnected()
