@@ -12,6 +12,7 @@ import CoreLocation
 import CloudKit
 import Vision
 import KeychainSwift
+import LocalAuthentication
 
 class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   var uuid: String!
@@ -19,6 +20,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
   var loginContainer = CKContainer.default()
   var camaraPerfilController: UIImagePickerController!
   var dataRegistration: [String]!
+  let myContext = LAContext()
   
   @IBOutlet weak var loginView: UIView!
   @IBOutlet weak var loadingView: UIView!
@@ -46,7 +48,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
     }
     
     if let tempLocation = self.locationManager.location{
-      GlobalVariables.currentPosition = tempLocation
+      globalVariables.currentPosition = tempLocation
     }else{
       self.locationManager.requestWhenInUseAuthorization()
     }
@@ -74,8 +76,7 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
         UIApplication.shared.registerForRemoteNotifications()
       }
     }
-    
-    self.getUserPhoto()
+
   }
   
   //MARK:- CHECK LOCATION PERMISSIONS
@@ -100,10 +101,10 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
   
   //MARK: - ACTUALIZACION DE GEOLOCALIZACION
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    if GlobalVariables.userLogged != nil && CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
-      if GlobalVariables.userLogged.location.distance(from: locations.last!) > 20{
-        GlobalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
-        GlobalVariables.currentPosition = locations.last!
+    if globalVariables.userLogged != nil && CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
+      if globalVariables.userLogged.location.distance(from: locations.last!) > 20{
+        globalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
+        globalVariables.currentPosition = locations.last!
       }
     }
   }
@@ -121,288 +122,29 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
     }
   }
   
-  func showLocationError(){
-    let locationAlert = UIAlertController (title: NSLocalizedString("Location Error", comment: ""), message: (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" searches the users closer to your position. Please go to Settings, active the Location services and open ", comment: "") + (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) + NSLocalizedString(" again.", comment: ""), preferredStyle: .alert)
-    locationAlert.addAction(UIAlertAction(title: NSLocalizedString("Active Location", comment: ""), style: .default, handler: {alerAction in
-      if #available(iOS 10.0, *) {
-        let settingsURL = URL(string: UIApplication.openSettingsURLString)!
-        UIApplication.shared.open(settingsURL, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
-          exit(0)
-        })
-      } else {
-        if let url = NSURL(string:UIApplication.openSettingsURLString) {
-          UIApplication.shared.openURL(url as URL)
-          exit(0)
-        }
-      }
-    }))
-    self.present(locationAlert, animated: true, completion: nil)
-  }
-  
-  func appUpdateAvailable() -> Bool
-  {
-    let storeInfoURL: String = GlobalConstants.storeBundleURL
-    var upgradeAvailable = false
-    
-    // Get the main bundle of the app so that we can determine the app's version number
-    let bundle = Bundle.main
-    if let infoDictionary = bundle.infoDictionary {
-      // The URL for this app on the iTunes store uses the Apple ID for the  This never changes, so it is a constant
-      let urlOnAppStore = URL(string: storeInfoURL)
-      if let dataInJSON = try? Data(contentsOf: urlOnAppStore!) {
-        // Try to deserialize the JSON that we got
-        if let lookupResults = try? JSONSerialization.jsonObject(with: dataInJSON, options: JSONSerialization.ReadingOptions()) as! Dictionary<String, Any>{
-          // Determine how many results we got. There should be exactly one, but will be zero if the URL was wrong
-          if let resultCount = lookupResults["resultCount"] as? Int {
-            if resultCount == 1 {
-              // Get the version number of the version in the App Store
-              //self.selectedRoute = (dictionary["routes"] as! Array<Dictionary<String, AnyObject>>)[0]
-              if let appStoreVersion = (lookupResults["results"]as! Array<Dictionary<String, AnyObject>>)[0]["version"] as? String {
-                // Get the version number of the current version
-                if let currentVersion = infoDictionary["CFBundleShortVersionString"] as? String {
-                  // Check if they are the same. If not, an upgrade is available.
-                  if appStoreVersion > currentVersion {
-                    upgradeAvailable = true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return upgradeAvailable
-  }
-  
-  func getUserPhoto(){
-    //TODO:- Search the photo locally
-    let photoStored = GlobalVariables.localStoreService.getPhotoFromLocalStore()
-    
-    if photoStored != nil && photoStored!.isFromToday(){
-        self.connectUser(photo: UIImage(data: photoStored?.photoImg as! Data)!)
-        self.loadingView.isHidden = false
-
-    }else{
-      let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) only requires you a photo to allows other users recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
-      
-      EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
-        
-        self.camaraPerfilController.sourceType = .camera
-        self.camaraPerfilController.cameraCaptureMode = .photo
-        self.camaraPerfilController.cameraDevice = .front
-        self.present(self.camaraPerfilController, animated: true, completion: nil)
-        
-      }))
-      EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
-        exit(0)
-      }))
-      self.present(EditPhoto, animated: true, completion: nil)
-    }
-  }
-  
-  func connectUser(photo: UIImage){
-    let imagenURL = self.saveImageToFile(photo)
-    
-    let photoContenido = CKAsset(fileURL: imagenURL)
-    
-    let recordUser = CKRecord(recordType:"UsersConnected")
-    recordUser.setObject(self.uuid as CKRecordValue, forKey: "id")
-    recordUser.setObject(photoContenido as CKRecordValue, forKey: "photo")
-    recordUser.setObject(["nadie"] as CKRecordValue, forKey: "bloqueados")
-    recordUser.setObject(GlobalVariables.currentPosition as CKRecordValue, forKey: "location")
-    print(GlobalVariables.currentPosition)
-    let predicateBriceVista = NSPredicate(format: "id == %@", self.uuid)
-    
-    let queryBriceVista = CKQuery(recordType: "UsersConnected",predicate: predicateBriceVista)
-    
-    self.loginContainer.publicCloudDatabase.perform(queryBriceVista, inZoneWith: nil, completionHandler: ({results, error in
-      
-      if (error == nil) {
-        if results?.count != 0{
-          let recordID = results?[0].recordID
-          self.loginContainer.publicCloudDatabase.delete(withRecordID: recordID!, completionHandler: { (record, error) in
-            
-          })
-        }
-        
-        self.loginContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
-          if error == nil{
-            GlobalVariables.userLogged = User(user: record!)
-            GlobalVariables.localStoreService.removeAllObjects(objectType: Photo.self)
-            GlobalVariables.localStoreService.saveObjectArray(objects: [Photo(id: UUID().uuidString, photo: photo, lastUpdated: Date())])
-            GlobalVariables.userLogged.userRegister()
-            self.loginOk()
-          }else{
-            print("error \(error.debugDescription)")
-          }
-        })
-      }else{
-        print("Consulta error")
-      }
-    }))
-
-  }
-  
-//  func getUserLogin(){
-//    let photoProfile = self.getUserPhoto()
-//
-//    if GlobalVariables.userDefaults.string(forKey: "userRecordID") != nil{
-//      loginContainer.publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: GlobalVariables.userDefaults.string(forKey: "userRecordID")!), completionHandler: { (record, error) in
-//        if error != nil {
-//          print("Error fetching  position record: \(String(describing: error?.localizedDescription))")
-//        } else {
-//          GlobalVariables.userLogged = User(user: record!)
-//          DispatchQueue.main.async {
-//            self.loadingView.isHidden = true
-//            self.loadingAnimation.isHidden = true
-//            let vc = R.storyboard.main.usersConnected()
-//            self.navigationController?.show(vc!, sender: nil)
-//            //            let vc = R.storyboard.main.inicioView()
-//            //            self.navigationController?.show(vc!, sender: nil)
-//          }
-//        }
-//      })
-//    }else {
-//      registerUser()
-//    }
-//  }
-  
-//  func getUserLogin(){
-//    if GlobalVariables.userDefaults.string(forKey: "userRecordID") != nil{
-//      loginContainer.publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: GlobalVariables.userDefaults.string(forKey: "userRecordID")!), completionHandler: { (record, error) in
-//        if error != nil {
-//          print("Error fetching  position record: \(String(describing: error?.localizedDescription))")
-//        } else {
-//          GlobalVariables.userLogged = User(user: record!)
-//          GlobalVariables.userLogged.ActualizarConectado(estado: "1")
-//          DispatchQueue.main.async {
-//            self.loadingView.isHidden = true
-//            self.loadingAnimation.isHidden = true
-//            let vc = R.storyboard.main.usersConnected()
-//            self.navigationController?.setNavigationBarHidden(false, animated: true)
-//            self.navigationController?.show(vc!, sender: nil)
-//            //            let vc = R.storyboard.main.inicioView()
-//            //            self.navigationController?.show(vc!, sender: nil)
-//          }
-//        }
-//      })
-//    }else {
-//      registerUser()
-//    }
-//  }
-  
-//  func registerUser(){
-//    loadingView.isHidden = true
-//    loadingAnimation.isHidden = true
-//  }
-  
-  func loginOk() {
-    DispatchQueue.main.async {
-      self.loadingView.isHidden = true
-      let vc = R.storyboard.main.usersConnected()
-      self.navigationController?.setNavigationBarHidden(false, animated: true)
-      self.navigationController?.show(vc!, sender: nil)
-      //            let vc = R.storyboard.main.inicioView()
-      //            self.navigationController?.show(vc!, sender: nil)
-    }
-  }
-  
-  
-  //MARK: -EVENTO PARA DETECTAR FOTO Y VIDEO TIRADA
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-    //self.registerUser()
-    // Local variable inserted by Swift 4.2 migrator.
-    let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-    
-    if camaraPerfilController.cameraDevice == .front{
-      //let mediaType = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.mediaType)] as! NSString
-      self.camaraPerfilController.dismiss(animated: true, completion: nil)
-      let photoPreview = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
-      
-      self.connectUser(photo: photoPreview!)
-      
-      self.loadingView.isHidden = false
-//      let imagenURL = self.saveImageToFile(photoPreview!)
-//
-//      GlobalVariables.userDefaults.set(imagenURL, forKey: "profilePhoto")
-//
-//      let fotoContenido = CKAsset(fileURL: imagenURL)
-//
-//      let recordUser = CKRecord(recordType:"UsersProfile")
-//      recordUser.setObject(fotoContenido as CKRecordValue, forKey: "photo")
-//      recordUser.setObject(["nadie"] as CKRecordValue, forKey: "bloqueados")
-//      recordUser.setObject("1" as CKRecordValue, forKey: "conectado")
-//      recordUser.setObject(GlobalVariables.currentPosition as CKRecordValue, forKey: "location")
-//
-//      self.loginContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
-//        if error == nil{
-//          GlobalVariables.userLogged = User(user: record!)
-//          UserDefaults.standard.set(record?.recordID.recordName, forKey: "userRecordID")
-//          DispatchQueue.main.async {
-//            self.loadingView.isHidden = true
-//            self.loadingAnimation.isHidden = true
-//            let vc = R.storyboard.main.usersConnected()
-//            self.navigationController?.setNavigationBarHidden(false, animated: true)
-//            self.navigationController?.show(vc!, sender: nil)
-//            //            let vc = R.storyboard.main.inicioView()
-//            //            self.navigationController?.show(vc!, sender: nil)
-//          }
-//        }else{
-//          print("error \(String(describing: error))")
-//        }
-//      })
-      
-    }else{
-      self.camaraPerfilController.dismiss(animated: true, completion: nil)
-      let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Wrong Camara"), message: NSLocalizedString("The profile only accepts selfies photo.", comment:""), preferredStyle: UIAlertController.Style.alert)
-      
-      EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a picture again", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
-        self.camaraPerfilController.sourceType = .camera
-        self.camaraPerfilController.cameraCaptureMode = .photo
-        self.camaraPerfilController.cameraDevice = .front
-        self.present(self.camaraPerfilController, animated: true, completion: nil)
-      }))
-      EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
-        exit(0)
-      }))
-      self.present(EditPhoto, animated: true, completion: nil)
-    }
-    
-  }
-  //RENDER IMAGEN
-  func saveImageToFile(_ image: UIImage) -> URL
-  {
-    let filemgr = FileManager.default
-    
-    let dirPaths = filemgr.urls(for: .documentDirectory,
-                                in: .userDomainMask)
-    
-    let fileURL = dirPaths[0].appendingPathComponent(image.description)
-    
-    if let renderedJPEGData =
-      image.jpegData(compressionQuality: 0.5) {
-      try! renderedJPEGData.write(to: fileURL)
-    }
-    
-    return fileURL
-  }
-  
   @IBAction func loginUser(_ sender: Any) {
+    print("checking Bio \(globalVariables.userDefaults.bool(forKey: "isUsingBioAuth"))")
+    if !globalVariables.userDefaults.bool(forKey: "isUsingBioAuth"){
+      self.getUserPhoto()
+    }else{
+      self.checkifBioAuth()
+    }
     
-    let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) only requires you a photo to allows other users recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
     
-    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
-      
-      self.camaraPerfilController.sourceType = .camera
-      self.camaraPerfilController.cameraCaptureMode = .photo
-      self.camaraPerfilController.cameraDevice = .front
-      self.present(self.camaraPerfilController, animated: true, completion: nil)
-      
-    }))
-    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
-      exit(0)
-    }))
-    self.present(EditPhoto, animated: true, completion: nil)
+//    let EditPhoto = UIAlertController (title: NSLocalizedString("Face photo",comment:"Create profil photo"), message: NSLocalizedString("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String) only requires you a photo to allows other users recognize you. Please take photo to you face.", comment:""), preferredStyle: UIAlertController.Style.alert)
+//
+//    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Take a photo", comment:"Yes"), style: UIAlertAction.Style.default, handler: {alerAction in
+//
+//      self.camaraPerfilController.sourceType = .camera
+//      self.camaraPerfilController.cameraCaptureMode = .photo
+//      self.camaraPerfilController.cameraDevice = .front
+//      self.present(self.camaraPerfilController, animated: true, completion: nil)
+//
+//    }))
+//    EditPhoto.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment:"Cancelar"), style: UIAlertAction.Style.destructive, handler: { action in
+//      exit(0)
+//    }))
+//    self.present(EditPhoto, animated: true, completion: nil)
   }
 }
 
@@ -485,8 +227,8 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
 //        if error != nil {
 //          print("Error fetching  position record: \(String(describing: error?.localizedDescription))")
 //        } else {
-//          GlobalVariables.userLogged = User(user: record!)
-//          GlobalVariables.userLogged.ActualizarConectado(estado: "1")
+//          globalVariables.userLogged = User(user: record!)
+//          globalVariables.userLogged.ActualizarConectado(estado: "1")
 //          DispatchQueue.main.async {
 //            self.loadingView.isHidden = true
 //            self.loadingAnimation.isHidden = true
@@ -528,11 +270,11 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
 //      recordUser.setObject(fotoContenido as CKRecordValue, forKey: "photo")
 //      recordUser.setObject(["nadie"] as CKRecordValue, forKey: "bloqueados")
 //      recordUser.setObject("1" as CKRecordValue, forKey: "conectado")
-//      recordUser.setObject(GlobalVariables.currentPosition as CKRecordValue, forKey: "location")
+//      recordUser.setObject(globalVariables.currentPosition as CKRecordValue, forKey: "location")
 //
 //      self.loginContainer.publicCloudDatabase.save(recordUser, completionHandler: {(record, error) in
 //        if error == nil{
-//          GlobalVariables.userLogged = User(user: record!)
+//          globalVariables.userLogged = User(user: record!)
 //          UserDefaults.standard.set(record?.recordID.recordName, forKey: "userRecordID")
 //          DispatchQueue.main.async {
 //            self.loadingView.isHidden = true
@@ -602,17 +344,3 @@ class LoginController: UIViewController, CLLocationManagerDelegate, UIImagePicke
 //  }
 //}
 
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
-  return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
-  return input.rawValue
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-  return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
-}

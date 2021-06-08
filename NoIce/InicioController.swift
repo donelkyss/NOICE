@@ -67,9 +67,9 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   
   //MARK: - ACTUALIZACION DE GEOLOCALIZACION
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    if GlobalVariables.userLogged != nil && CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
-      if GlobalVariables.userLogged.location.distance(from: locations.last!) > 20{
-        GlobalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
+    if globalVariables.userLogged != nil && CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
+      if globalVariables.userLogged.location.distance(from: locations.last!) > 20{
+        globalVariables.userLogged.Actualizarlocation(locationActual: locations.last!)
       }
     }else{
       print("here")
@@ -125,34 +125,34 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   //MEJORAR ESTA FUNCION CAMBIAR EL CICLO FOR:
   @objc func BuscarUsuariosConectados(){
     print("creating query")
-    if GlobalVariables.userLogged.location != GlobalVariables.currentPosition {
-      let userLoggedReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
-      let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",GlobalVariables.userLogged.location, userLoggedReference)
+    if globalVariables.userLogged.location != globalVariables.currentPosition {
+      let userLoggedReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: globalVariables.userLogged.cloudId), action: .none)
+      let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",globalVariables.userLogged.location, userLoggedReference)
       self.TimerStart(estado: 0)
       let queryUsuarioIn = CKQuery(recordType: "UsersConnected",predicate: predicateUsuarioIn)
-      queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: GlobalVariables.userLogged.location)]
+      queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: globalVariables.userLogged.location)]
       self.cloudContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
         if (error == nil) {
           print("getting query result")
-          GlobalVariables.usuariosMostrar.removeAll()
+          globalVariables.usuariosMostrar.removeAll()
           if (results?.count)! > 0{
             var i = 0
             while i < (results?.count)!{
               let bloqueados = results?[i].value(forKey: "bloqueados") as! [String]
-              if !bloqueados.contains(GlobalVariables.userLogged.id) && !GlobalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "id") as! String){
+              if !bloqueados.contains(globalVariables.userLogged.id) && !globalVariables.userLogged.bloqueados.contains(results?[i].value(forKey: "id") as! String){
                 print("hereee")
                 let usuarioTemp = User(user: results![i])
-                //usuarioTemp.buscarNuevosMSG(userDestino: GlobalVariables.userLogged!.recordID)
-                GlobalVariables.usuariosMostrar.append(usuarioTemp)
+                //usuarioTemp.buscarNuevosMSG(userDestino: globalVariables.userLogged!.recordID)
+                globalVariables.usuariosMostrar.append(usuarioTemp)
               }
 //              let usuarioTemp = User(user: results![i])
-//              GlobalVariables.usuariosMostrar.append(usuarioTemp)
-                // GlobalVariables.usuariosMostrar[i].buscarNuevosMSG(userDestino: GlobalVariables.userLogged.cloudId)
+//              globalVariables.usuariosMostrar.append(usuarioTemp)
+                // globalVariables.usuariosMostrar[i].buscarNuevosMSG(userDestino: globalVariables.userLogged.cloudId)
               i += 1
             }
           }
           DispatchQueue.main.async {
-            if GlobalVariables.usuariosMostrar.count > 0{
+            if globalVariables.usuariosMostrar.count > 0{
               let vc = R.storyboard.main.usersConnected()
               self.navigationController?.setNavigationBarHidden(false, animated: true)
               self.navigationController?.show(vc!, sender: nil)
@@ -176,7 +176,7 @@ class InicioController: UIViewController, CLLocationManagerDelegate, UIImagePick
   
   //MARK: - ACTION BOTONES GRAFICOS
   @IBAction func ShowMenuBtn(_ sender: Any) {
-    GlobalVariables.userLogged.desconnect()//desconnect
+    globalVariables.userLogged.desconnect()//desconnect
     sleep(3)
     exit(0)
   }

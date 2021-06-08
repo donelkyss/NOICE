@@ -70,6 +70,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>The app requires acces to the camera to take user perfil photo.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>The app require acces to Bio auth, to use as auth method.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs to access your Location to search people closer to your position.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

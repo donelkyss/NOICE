@@ -102,6 +102,72 @@ public protocol MessagesDataSource: AnyObject {
     ///
     /// The default value returned by this method is `nil`.
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString?
+
+    /// The attributed text to be used for cell's timestamp label.
+    /// The timestamp label is shown when showMessageTimestampOnSwipeLeft is enabled by swiping left over the chat controller.
+    ///
+    /// - Parameters:
+    ///   - message: The `MessageType` that will be displayed by this cell.
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// The default value returned by this method is `nil`.
+    func messageTimestampLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString?
+    
+    /// Text collectionView cell for message with `text`, `attributedText`, `emoji` message types.
+    ///
+    /// - Parameters:
+    ///   - message: The `text`, `attributedText`, `emoji` message type
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   This method will return nil by default. You must override this method only if you want your own cell.
+    func textCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell?
+    
+    /// Photo or Video collectionView cell for message with `photo`, `video` message types.
+    ///
+    /// - Parameters:
+    ///   - message: The `photo`, `video` message type
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   This method will return nil by default. You must override this method only if you want your own cell.
+    func photoCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell?
+    
+    /// Location collectionView cell for message with `location` message type.
+    ///
+    /// - Parameters:
+    ///   - message: The `location` message type
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   This method will return nil by default. You must override this method only if you want your own cell.
+    func locationCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell?
+    
+    /// Audio collectionView cell for message with `audio` message type.
+    ///
+    /// - Parameters:
+    ///   - message: The `audio` message type
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   This method will return nil by default. You must override this method only if you want your own cell.
+    func audioCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell?
+    
+    /// Contact collectionView cell for message with `contact` message type.
+    ///
+    /// - Parameters:
+    ///   - message: The `contact` message type
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   This method will return nil by default. You must override this method only if you want your own cell.
+    func contactCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell?
     
     /// Custom collectionView cell for message with `custom` message type.
     ///
@@ -146,6 +212,39 @@ public extension MessagesDataSource {
     }
 
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        return nil
+    }
+
+    func messageTimestampLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let sentDate = message.sentDate
+        let sentDateString = MessageKitDateFormatter.shared.string(from: sentDate)
+        let timeLabelFont: UIFont = .boldSystemFont(ofSize: 10)
+        let timeLabelColor: UIColor
+        if #available(iOS 13, *) {
+            timeLabelColor = .systemGray
+        } else {
+            timeLabelColor = .darkGray
+        }
+        return NSAttributedString(string: sentDateString, attributes: [NSAttributedString.Key.font: timeLabelFont, NSAttributedString.Key.foregroundColor: timeLabelColor])
+    }
+    
+    func textCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell? {
+        return nil
+    }
+    
+    func photoCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell? {
+        return nil
+    }
+    
+    func locationCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell? {
+        return nil
+    }
+    
+    func audioCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell? {
+        return nil
+    }
+    
+    func contactCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell? {
         return nil
     }
     

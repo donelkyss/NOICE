@@ -55,7 +55,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
     
     self.helpTextView.text = NSLocalizedString("Click photo to chat or Slide it to hide and block.", comment: "")
     
-    print("coudId \(GlobalVariables.userLogged.cloudId)")
+    print("cloudId \(globalVariables.userLogged.cloudId)")
     
     self.userConnectedNotificationCenter.delegate = self
   }
@@ -90,10 +90,10 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   //CUSTOM FUNCTIONS
   @objc func buscarUsuariosConectados(){
     print("buscando")
-    let userLoggedReference = CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId)
-    let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",GlobalVariables.userLogged.location, userLoggedReference)
+    let userLoggedReference = CKRecord.ID(recordName: globalVariables.userLogged.cloudId)
+    let predicateUsuarioIn = NSPredicate(format: "distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@",globalVariables.userLogged.location, userLoggedReference)
     let queryUsuarioIn = CKQuery(recordType: "UsersConnected",predicate: predicateUsuarioIn)
-    queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: GlobalVariables.userLogged.location)]
+    queryUsuarioIn.sortDescriptors = [CKLocationSortDescriptor(key: "location", relativeLocation: globalVariables.userLogged.location)]
     self.userContainer.publicCloudDatabase.perform(queryUsuarioIn, inZoneWith: nil, completionHandler: ({results, error in
       if (error == nil) {
         print("Something \(results?.count)")
@@ -130,7 +130,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   }
   
   func buscarNuevosMSG() {
-    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
+    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: globalVariables.userLogged.cloudId), action: .none)
     //let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.id), action: .none)
     let predicateMesajes = NSPredicate(format: "to == %@",toReference)
     
@@ -163,7 +163,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   func createNewUsersConnectedSubscription(){
     print("working userConnected")
     //UNUserNotificationCenter.current().delegate = self
-    let predicate = NSPredicate(format:"distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@", GlobalVariables.userLogged.location, CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+    let predicate = NSPredicate(format:"distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@", globalVariables.userLogged.location, CKRecord.ID(recordName: globalVariables.userLogged.cloudId))
     let subscription = CKQuerySubscription(recordType: "UsersConnected", predicate: predicate, options: [.firesOnRecordCreation,.firesOnRecordDeletion])
     
     let notification = CKSubscription.NotificationInfo()
@@ -182,7 +182,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   
   func createNewMsgSubscription(){
     print("working message")
-    let predicate = NSPredicate(format: "to = %@",CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+    let predicate = NSPredicate(format: "to = %@",CKRecord.ID(recordName: globalVariables.userLogged.cloudId))
     let subscription = CKQuerySubscription(recordType: "Messages", predicate: predicate, options: [.firesOnRecordCreation])
     let notification = CKSubscription.NotificationInfo()
     notification.soundName = "default"
@@ -226,7 +226,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
         if (error == nil) {
           if (record?.value(forKey: "recordType") as! String) == "Messages"{
             let newMessage = Message(newMessage: record!)
-            if newMessage.to == GlobalVariables.userLogged.cloudId{
+            if newMessage.to == globalVariables.userLogged.cloudId{
               let userIndex = self.usersConnected.firstIndex(where: {$0.cloudId == newMessage.from})
               self.usersConnected[userIndex!].NewMsg = true
               DispatchQueue.main.async {
@@ -248,7 +248,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   }
   
   func blockUser(userToBlock: String){
-    GlobalVariables.userLogged.ActualizarBloqueo(userToBlock: userToBlock, completionHandler: { success in
+    globalVariables.userLogged.ActualizarBloqueo(userToBlock: userToBlock, completionHandler: { success in
       if success {
         self.usersConnected.removeAll{$0.id == userToBlock}
         DispatchQueue.main.async {
@@ -267,7 +267,7 @@ class UsersConnected: UIViewController, UIGestureRecognizerDelegate{
   }
   
   @IBAction func CloseApp(_ sender: Any) {
-    GlobalVariables.userLogged.desconnect()//desconnect
+    globalVariables.userLogged.desconnect()//desconnect
   }
   
   @IBAction func showHelp(_ sender: Any) {

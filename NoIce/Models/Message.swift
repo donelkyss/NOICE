@@ -49,7 +49,7 @@ class Message: Equatable, MessageType{
     self.to = to
     self.text = text
     self.messageId = "test"
-    sender = Sender(id: GlobalVariables.userLogged.cloudId, displayName: "")
+    sender = Sender(id: globalVariables.userLogged.cloudId, displayName: "")
     
     sentDate = Date()
     kind = .text(text)
@@ -101,7 +101,7 @@ class Message: Equatable, MessageType{
 //  }
 //  
 //  var sender: Sender {
-//    return Sender(id: GlobalVariables.userLogged.recordID.recordName, displayName: "")
+//    return Sender(id: globalVariables.userLogged.recordID.recordName, displayName: "")
 //  }
 //  
 //  var sentDate: Date {

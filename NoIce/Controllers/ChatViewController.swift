@@ -13,7 +13,7 @@ import AVKit
 import CloudKit
 import UserNotifications
 
-class ChatViewController: MessagesViewController, UINavigationControllerDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate {
+class ChatViewController: MessagesViewController, UINavigationControllerDelegate, UITextFieldDelegate {
   
   var chatOpenPos: Int!
   var userSelected: User!
@@ -45,7 +45,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
     messageInputBar.delegate = self
 
     self.BloUser.isEnabled = false
-    //    self.senderId = GlobalVariables.userLogged.Email
+    //    self.senderId = globalVariables.userLogged.Email
     //    self.senderDisplayName = ""
     
     //Hide adjunte button
@@ -194,7 +194,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   
   func createNewMsgSubscription(){
     print("creating chat message subscription")
-    let predicate =  NSPredicate(format: "from == %@ and to == %@",CKRecord.ID(recordName: self.userSelected.cloudId),CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+    let predicate =  NSPredicate(format: "from == %@ and to == %@",CKRecord.ID(recordName: self.userSelected.cloudId),CKRecord.ID(recordName: globalVariables.userLogged.cloudId))
     let subscription = CKQuerySubscription(recordType: "Messages", predicate: predicate, options: [.firesOnRecordCreation])
     
     let notification = CKSubscription.NotificationInfo()
@@ -230,7 +230,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
           if (record?.value(forKey: "recordType") as! String) == "Messages"{
             
             let newMessage = Message(newMessage: record!)
-            if newMessage.to == GlobalVariables.userLogged.cloudId{
+            if newMessage.to == globalVariables.userLogged.cloudId{
               self.messageList.append(newMessage)
               DispatchQueue.main.async {
                 self.configureMessageCollectionView()
@@ -255,7 +255,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   // SENDING BUTTONS FUNCTIONS
   
   //    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
-  //      mensajesMostrados.append(JSQMessage(senderId: GlobalVariables.userLogged.Email, displayName: "", text: text))
+  //      mensajesMostrados.append(JSQMessage(senderId: globalVariables.userLogged.Email, displayName: "", text: text))
   //      collectionView.reloadData()
   //      SendNewMessage(text: text)
   //      finishSendingMessage()
@@ -263,7 +263,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   //
   //FUNCTION TO SEARCH NEW messageList
   @objc func buscarNewMSG() {
-    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId), action: .none)
+    let toReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: globalVariables.userLogged.cloudId), action: .none)
     let fromReference = CKRecord.Reference(recordID: CKRecord.ID(recordName: self.userSelected.cloudId), action: .none)
     let predicateMesajes = NSPredicate(format: "to == %@ and from == %@",toReference,fromReference)
     
@@ -301,15 +301,15 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   }
   
   @objc func closeApp(){
-    GlobalVariables.userLogged.desconnect()
+    globalVariables.userLogged.desconnect()
   }
   
   @IBAction func BlockUser(_ sender: Any) {
     self.BloUser.isEnabled = false
-    GlobalVariables.userLogged.ActualizarBloqueo(userToBlock: self.userSelected.id){ success in
+    globalVariables.userLogged.ActualizarBloqueo(userToBlock: self.userSelected.id){ success in
       if success{
         self.MSGTimer.invalidate()
-        GlobalVariables.usuariosMostrar.remove(at: self.chatOpenPos)
+        globalVariables.usuariosMostrar.remove(at: self.chatOpenPos)
         DispatchQueue.main.async {
           let vc = R.storyboard.main.inicioView()
           self.navigationController?.show(vc!, sender: nil)
@@ -329,7 +329,7 @@ class ChatViewController: MessagesViewController, UINavigationControllerDelegate
   }
   
   func SendNewMessage(text: String) {
-    let newmensaje = Message(from: GlobalVariables.userLogged.cloudId, to: GlobalVariables.usuariosMostrar[chatOpenPos].id, text: text)
+    let newmensaje = Message(from: globalVariables.userLogged.cloudId, to: globalVariables.usuariosMostrar[chatOpenPos].id, text: text)
   }
   
   func configureMessageCollectionView() {

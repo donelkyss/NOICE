@@ -5,15 +5,17 @@
 //  Created by Done Santana on 26/4/17.
 //  Copyright © 2017 Done Santana. All rights reserved.
 //
-
+import Foundation
 import UIKit
 import CloudKit
 import AssetsLibrary
 import CoreImage
+import LocalAuthentication
 
 class ProfileController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
   
   var camaraController: UIImagePickerController!
+  let myContext = LAContext()
   
   //VISUAL VARS
   @IBOutlet weak var UserPerfilView: UIView!
@@ -23,6 +25,8 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var buttonsView: UIView!
   @IBOutlet weak var backBtn: UIButton!
+  @IBOutlet weak var isFaceId: UISwitch!
+  @IBOutlet weak var bioSwitchText: UILabel!
   
   
   @IBOutlet weak var userPerfilPhoto: UIImageView!
@@ -44,7 +48,18 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     self.userPerfilPhoto.contentMode = .scaleAspectFill
     //self.userPerfilPhoto.layer.cornerRadius = 25
     self.userPerfilPhoto.clipsToBounds = true
-    self.userPerfilPhoto.image = GlobalVariables.userLogged.photoProfile
+    self.userPerfilPhoto.image = globalVariables.userLogged.photoProfile
+    print(globalVariables.userDefaults.bool(forKey: "isUsingBioAuth"))
+    self.isFaceId.isOn = globalVariables.userDefaults.bool(forKey: "isUsingBioAuth")
+    
+    switch  myContext.biometricType {
+    case .faceID:
+      self.bioSwitchText.text = "Use Face ID"
+    case .touchID:
+      self.bioSwitchText.text = "Use Touch ID"
+    default:
+      print("")
+    }
     
   }
   
@@ -66,7 +81,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
       //let newimage = info[UIImagePickerControllerOriginalImage] as? UIImage
       
       let photoPreview = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
-      GlobalVariables.userLogged.ActualizarPhoto(newphoto: photoPreview!)
+      globalVariables.userLogged.ActualizarPhoto(newphoto: photoPreview!)
       self.userPerfilPhoto.image = photoPreview
       /*
        let imagenURL = self.saveImageToFile(photoPreview!)
@@ -79,7 +94,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
        let faces = faceDetector.features(in: image) as! [CIFaceFeature]
        print("faces \(faces)")
        if faces.count > 0{
-       GlobalVariables.userLogged.ActualizarPhoto(newphoto: photoPreview!)
+       globalVariables.userLogged.ActualizarPhoto(newphoto: photoPreview!)
        self.userPerfilPhoto.image = photoPreview
        }else{
        let EditPhoto = UIAlertController (title: NSLocalizedString("Error",comment:"Wrong Camara"), message: NSLocalizedString("The profile only accepts selfies photo. Please, make sure that your face is completely visible.", comment:""), preferredStyle: UIAlertControllerStyle.alert)
@@ -95,7 +110,7 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
        self.present(EditPhoto, animated: true, completion: nil)
        }*/
       
-      //GlobalVariables.userLogged.ActualizarPhoto(newphoto: newimage!)
+      //globalVariables.userLogged.ActualizarPhoto(newphoto: newimage!)
       //self.userPerfilPhoto.image = newimage
       
     }else{
@@ -133,11 +148,67 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
     return fileURL
   }
   
+  func checkifBioAuth(){
+    let myLocalizedReasonString =  NSLocalizedString("Biometric Authntication", comment:"Yes")
+    
+    var authError: NSError?
+    if myContext.canEvaluatePolicy(.deviceOwnerAuthentication, error: &authError) {
+      myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString) { success, evaluateError in
+        
+        DispatchQueue.main.async {
+          if evaluateError == nil {
+          if success {
+            //globalVariables.userDefaults.set(true, forKey: "isUsingBioAuth")
+            globalVariables.userDefaults.set(self.isFaceId.isOn ? true : nil, forKey: "isUsingBioAuth")
+            print("success \(globalVariables.userDefaults.bool(forKey: "isUsingBioAuth"))")
+            // User authenticated successfully, take appropriate action
+            //self.successLabel.text = "Awesome!!... User authenticated successfully"
+          } else {
+            print("Unsuccess")
+            self.isFaceId.isOn = false
+            let ac = UIAlertController(title: "Authentication failed", message: "You could not be verified; please try again.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(ac, animated: true)
+            // User did not authenticate successfully, look at error and take appropriate action
+            //self.successLabel.text = "Sorry!!... User did not authenticate successfully"
+          }
+        }else{
+          print(evaluateError.debugDescription)
+          self.isFaceId.isOn = false
+          let ac = UIAlertController(title: "Authentication failed", message: "You have to active Biometric Id on Settings.", preferredStyle: .alert)
+          ac.addAction(UIAlertAction(title: "OK", style: .default, handler:{ alertAction in
+            let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+            UIApplication.shared.open(settingsURL, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
+              exit(0)
+            })
+          }))
+          self.present(ac, animated: true)
+        }
+      }
+      }
+    } else {
+      globalVariables.userDefaults.set(nil, forKey: "isUsingBioAuth")
+      self.isFaceId.isOn = false
+      print("evaluation error")
+      // Could not evaluate policy; look at authError and present an appropriate message to user
+      //successLabel.text = "Sorry!!.. Could not evaluate policy."
+    }
+  }
+  
   @IBAction func EditPhoto(_ sender: Any) {
     self.camaraController.sourceType = .camera
     self.camaraController.cameraCaptureMode = .photo
     self.camaraController.cameraDevice = .front
     self.present(self.camaraController, animated: true, completion: nil)
+  }
+  
+  @IBAction func switchBioAuth(_ sender: Any) {
+    //globalVariables.userDefaults.set(self.isFaceId.isOn ? true : false, forKey: "isUsingBioAuth")
+    //print("Bio \(globalVariables.userDefaults.value(forKey: "isUsingBioAuth"))")
+    self.checkifBioAuth()
+//    if self.isFaceId.isOn{
+//      self.checkifBioAuth()
+//    }
   }
   
   @IBAction func ShareApp(_ sender: Any) {
@@ -154,9 +225,8 @@ class ProfileController: UIViewController, UINavigationControllerDelegate, UIIma
   }
   
   @IBAction func SignOut(_ sender: Any) {
-    GlobalVariables.userLogged.desconnect()
+    globalVariables.userLogged.desconnect()
   }
-  
   
 }
 
@@ -168,4 +238,8 @@ fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [U
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
   return input.rawValue
+}
+
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+  return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

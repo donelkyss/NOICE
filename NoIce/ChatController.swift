@@ -41,7 +41,7 @@
 //    //loadFirstMessages()
 //    //title = "MessageKit"
 //
-//    let image = GlobalVariables.usuariosMostrar[self.chatOpenPos].photoProfile
+//    let image = globalVariables.usuariosMostrar[self.chatOpenPos].photoProfile
 //    let imgBackground:UIImageView = UIImageView(frame: self.view.bounds)
 //    imgBackground.image = image
 //    imgBackground.contentMode = UIView.ContentMode.scaleAspectFill
@@ -156,7 +156,7 @@
 //  // MARK: - MessagesDataSource
 ////
 ////  func currentSender() -> SenderType {
-////    return GlobalVariables.userLogged.currentSender
+////    return globalVariables.userLogged.currentSender
 ////  }
 ////
 ////  func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
@@ -341,9 +341,9 @@
 //
 //  private func insertMessages(_ data: [Any]) {
 //    for component in data {
-//      let user = GlobalVariables.userLogged
+//      let user = globalVariables.userLogged
 //      if let str = component as? String {
-//        let message = Message(from: GlobalVariables.userLogged.recordID.recordName, to: GlobalVariables.usuariosMostrar[self.chatOpenPos].recordID.recordName, text: str)
+//        let message = Message(from: globalVariables.userLogged.recordID.recordName, to: globalVariables.usuariosMostrar[self.chatOpenPos].recordID.recordName, text: str)
 //        insertMessage(message)
 //      } else if let img = component as? UIImage {
 ////        let message = MockMessage(image: img, user: user, messageId: UUID().uuidString, date: Date())

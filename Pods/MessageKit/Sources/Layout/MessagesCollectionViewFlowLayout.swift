@@ -22,6 +22,7 @@
  SOFTWARE.
  */
 
+import Foundation
 import UIKit
 import AVFoundation
 
@@ -169,6 +170,7 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
     lazy open var audioMessageSizeCalculator = AudioMessageSizeCalculator(layout: self)
     lazy open var contactMessageSizeCalculator = ContactMessageSizeCalculator(layout: self)
     lazy open var typingIndicatorSizeCalculator = TypingCellSizeCalculator(layout: self)
+    lazy open var linkPreviewMessageSizeCalculator = LinkPreviewMessageSizeCalculator(layout: self)
 
     /// Note:
     /// - If you override this method, remember to call MessageLayoutDelegate's
@@ -182,21 +184,23 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
         let message = messagesDataSource.messageForItem(at: indexPath, in: messagesCollectionView)
         switch message.kind {
         case .text:
-            return textMessageSizeCalculator
+            return messagesLayoutDelegate.textCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ?? textMessageSizeCalculator
         case .attributedText:
-            return attributedTextMessageSizeCalculator
+            return messagesLayoutDelegate.attributedTextCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  attributedTextMessageSizeCalculator
         case .emoji:
-            return emojiMessageSizeCalculator
+            return messagesLayoutDelegate.emojiCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  emojiMessageSizeCalculator
         case .photo:
-            return photoMessageSizeCalculator
+            return messagesLayoutDelegate.photoCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  photoMessageSizeCalculator
         case .video:
-            return videoMessageSizeCalculator
+            return messagesLayoutDelegate.videoCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  videoMessageSizeCalculator
         case .location:
-            return locationMessageSizeCalculator
+            return messagesLayoutDelegate.locationCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  locationMessageSizeCalculator
         case .audio:
-            return audioMessageSizeCalculator
+            return messagesLayoutDelegate.audioCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  audioMessageSizeCalculator
         case .contact:
-            return contactMessageSizeCalculator
+            return messagesLayoutDelegate.contactCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView) ??  contactMessageSizeCalculator
+        case .linkPreview:
+            return linkPreviewMessageSizeCalculator
         case .custom:
             return messagesLayoutDelegate.customCellSizeCalculator(for: message, at: indexPath, in: messagesCollectionView)
         }
@@ -321,7 +325,8 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 videoMessageSizeCalculator,
                 locationMessageSizeCalculator,
                 audioMessageSizeCalculator,
-                contactMessageSizeCalculator
+                contactMessageSizeCalculator,
+                linkPreviewMessageSizeCalculator
         ]
     }
     

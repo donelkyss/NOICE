@@ -21,7 +21,7 @@ import UserNotifications
 //  func getNewUsersConnected(predicate: NSPredicate?){
 //    print("working good")
 //    UNUserNotificationCenter.current().delegate = self
-//    let predicate = NSPredicate(format:"distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@", GlobalVariables.userLogged.location, CKRecord.ID(recordName: GlobalVariables.userLogged.cloudId))
+//    let predicate = NSPredicate(format:"distanceToLocation:fromLocation:(location, %@) < 100 and recordID != %@", globalVariables.userLogged.location, CKRecord.ID(recordName: globalVariables.userLogged.cloudId))
 //    let subscription = CKQuerySubscription(recordType: "UsersConnected", predicate: predicate, options: [.firesOnRecordCreation,.firesOnRecordDeletion])
 //
 //    let notification = CKSubscription.NotificationInfo()

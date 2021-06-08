@@ -1,19 +1,19 @@
 PODS:
   - Canvas (0.1.2)
-  - InputBarAccessoryView (4.3.3):
-    - InputBarAccessoryView/Core (= 4.3.3)
-  - InputBarAccessoryView/Core (4.3.3)
+  - InputBarAccessoryView (5.3.1):
+    - InputBarAccessoryView/Core (= 5.3.1)
+  - InputBarAccessoryView/Core (5.3.1)
   - KeychainSwift (19.0.0)
-  - MessageKit (3.1.0):
-    - InputBarAccessoryView (~> 4.3.0)
-  - R.swift (5.3.1):
+  - MessageKit (3.6.1):
+    - InputBarAccessoryView (~> 5.3.1)
+  - R.swift (5.4.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
-  - Realm (10.5.1):
-    - Realm/Headers (= 10.5.1)
-  - Realm/Headers (10.5.1)
-  - RealmSwift (10.5.1):
-    - Realm (= 10.5.1)
+  - Realm (10.7.6):
+    - Realm/Headers (= 10.7.6)
+  - Realm/Headers (10.7.6)
+  - RealmSwift (10.7.6):
+    - Realm (= 10.7.6)
 
 DEPENDENCIES:
   - Canvas
@@ -35,14 +35,14 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Canvas: eb861e3b555d032648146c8ffda1a5dea40059ca
-  InputBarAccessoryView: 8e7fc09e9cba75e0fee5da13450e15c194806f69
+  InputBarAccessoryView: 1f75d8c9f75e5e57f3ffac36ed58635a8005e0bc
   KeychainSwift: a06190cf933ad46b1e0abc3d77d29c06331715c7
-  MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
-  R.swift: 56ec7e3aef34b9eee47a659e42462db2c1cc5ac3
+  MessageKit: d153fbbbcb12f3f4045a1ba8874298924dacfb62
+  R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
-  Realm: 77fcb4e0b9f2963ea06f584749a0d7dc9cab95e1
-  RealmSwift: 6abe6aa6cd8b70cc1a87afcb9232cabea74ff1ac
+  Realm: ed860452717c8db8f4bf832b6807f7f2ce708839
+  RealmSwift: e31c4ddbcc42ac879313d656b86f9ca539f6f4f4
 
-PODFILE CHECKSUM: 3e4a72540a095cc377e8579cbb260492aa055b4c
+PODFILE CHECKSUM: d31f107f4473222d94cde05bef8f129ab50778d8
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

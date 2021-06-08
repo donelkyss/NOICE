@@ -94,7 +94,7 @@ class User{
 //    }else{
 //      let imagenURL = self.saveImageToFile(self.photoProfile!)
 //
-//      GlobalVariables.userDefaults.set(imagenURL, forKey: "profilePhoto")
+//      globalVariables.userDefaults.set(imagenURL, forKey: "profilePhoto")
 //
 //      let photoContenido = CKAsset(fileURL: imagenURL)
 //
@@ -158,7 +158,7 @@ class User{
 //  }
   
   func ActualizarPhoto(newphoto: UIImage){
-    if !newphoto.isEqual(GlobalVariables.userLogged.photoProfile){
+    if !newphoto.isEqual(globalVariables.userLogged.photoProfile){
 
       let imagenURL = newphoto.saveImageToFile()
       let photoUser = CKAsset(fileURL: imagenURL)
@@ -175,9 +175,9 @@ class User{
               self.ActualizarPhoto(newphoto: newphoto)
             } else {
               self.photoProfile = newphoto
-              GlobalVariables.userLogged.photoProfile = newphoto
-              GlobalVariables.localStoreService.removeAllObjects(objectType: Photo.self)
-              GlobalVariables.localStoreService.saveObjectArray(objects: [Photo(id: UUID().uuidString, photo: newphoto, lastUpdated: Date())])
+              globalVariables.userLogged.photoProfile = newphoto
+              globalVariables.localStoreService.removeAllObjects(objectType: Photo.self)
+              globalVariables.localStoreService.saveObjectArray(objects: [Photo(id: UUID().uuidString, photo: newphoto, lastUpdated: Date())])
             }
           })
         }

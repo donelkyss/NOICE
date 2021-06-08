@@ -1,5 +1,5 @@
 //
-//  GlobalVariables.swift
+//  globalVariables.swift
 //  NoIce
 //
 //  Created by Donelkys Santana on 5/18/19.
@@ -9,7 +9,7 @@
 import Foundation
 import CloudKit
 
-struct GlobalVariables {
+struct globalVariables {
   static var userLogged: User!
   static var currentPosition = CLLocation()
   static var usuariosMostrar: [User] = []

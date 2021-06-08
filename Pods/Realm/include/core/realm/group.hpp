@@ -24,6 +24,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
+#include <optional>
 
 #include <realm/util/features.h>
 #include <realm/exceptions.hpp>
@@ -43,7 +44,7 @@ namespace _impl {
 class GroupFriend;
 class TransactLogConvenientEncoder;
 class TransactLogParser;
-}
+} // namespace _impl
 
 
 /// A group is a collection of named tables.
@@ -87,7 +88,6 @@ public:
     /// behavior.
     Group(unattached_tag) noexcept;
 
-    // FIXME: Implement a proper copy constructor (fairly trivial).
     Group(const Group&) = delete;
     Group& operator=(const Group&) = delete;
 
@@ -219,7 +219,10 @@ public:
     /// results in undefined behavior.
     bool is_attached() const noexcept;
     /// A group is frozen only if it is actually a frozen transaction.
-    virtual bool is_frozen() const noexcept { return false; }
+    virtual bool is_frozen() const noexcept
+    {
+        return false;
+    }
     /// Returns true if, and only if the number of tables in this
     /// group is zero.
     bool is_empty() const noexcept;
@@ -239,6 +242,7 @@ public:
     /// GlobalKeys.
     uint64_t get_sync_file_id() const noexcept;
     void set_sync_file_id(uint64_t id);
+    void remove_sync_file_id();
 
     /// Returns the keys for all tables in this group.
     TableKeys get_table_keys() const;
@@ -463,9 +467,9 @@ public:
                 , old_target_key(otk)
             {
             }
-            TableKey origin_table;     ///< A group-level table.
-            ColKey origin_col_key;     ///< Link column being nullified.
-            ObjKey origin_key;         ///< Row in column being nullified.
+            TableKey origin_table; ///< A group-level table.
+            ColKey origin_col_key; ///< Link column being nullified.
+            ObjKey origin_key;     ///< Row in column being nullified.
             /// The target row index which is being removed. Mostly relevant for
             /// LinkList (to know which entries are being removed), but also
             /// valid for Link.
@@ -547,6 +551,10 @@ public:
     /// identical, the numbers will of course be equal.
     size_t get_used_space() const noexcept;
 
+    /// check that an already attached realm file is valid for read only access.
+    /// if not detach the file and throw a FileFormatUpgradeRequired.
+    /// return the file format version.
+    static int read_only_version_check(SlabAlloc& alloc, ref_type top_ref, const std::string& path);
     void verify() const;
     void validate_primary_columns();
 #ifdef REALM_DEBUG
@@ -629,21 +637,12 @@ private:
     bool m_attached = false;
     bool m_is_writable = true;
     const bool m_is_shared;
+    static std::optional<int> fake_target_file_format;
 
     std::function<void(const CascadeNotification&)> m_notify_handler;
     std::function<void()> m_schema_change_handler;
     std::shared_ptr<metrics::Metrics> m_metrics;
     size_t m_total_rows;
-
-    class TableRecycler : public std::vector<Table*> {
-    public:
-        ~TableRecycler()
-        {
-            for (auto t : *this) {
-                delete t;
-            }
-        }
-    };
 
     static constexpr size_t s_table_name_ndx = 0;
     static constexpr size_t s_table_refs_ndx = 1;
@@ -658,18 +657,6 @@ private:
     static constexpr size_t s_sync_file_id_ndx = 10;
 
     static constexpr size_t s_group_max_size = 11;
-
-    // We use the classic approach to construct a FIFO from two LIFO's,
-    // insertion is done into recycler_1, removal is done from recycler_2,
-    // and when recycler_2 is empty, recycler_1 is reversed into recycler_2.
-    // this i O(1) for each entry.
-    static TableRecycler g_table_recycler_1;
-    static TableRecycler g_table_recycler_2;
-    // number of tables held back before being recycled. We hold back recycling
-    // the latest to increase the probability of detecting race conditions
-    // without crashing.
-    const static int g_table_recycling_delay = 100;
-    static std::mutex g_table_recycler_mutex;
 
     struct shared_tag {
     };
@@ -829,7 +816,8 @@ private:
     /// the file validity checks in Group::open() and DB::do_open, the file
     /// format selection logic in
     /// Group::get_target_file_format_version_for_session(), and the file format
-    /// upgrade logic in Group::upgrade_file_format().
+    /// upgrade logic in Group::upgrade_file_format(), AND the lists of accepted
+    /// file formats and the version deletion list residing in "backup_restore.cpp"
 
     int get_file_format_version() const noexcept;
     void set_file_format_version(int) noexcept;
@@ -1148,9 +1136,7 @@ public:
     virtual ref_type write_names(_impl::OutputStream&) = 0;
     virtual ref_type write_tables(_impl::OutputStream&) = 0;
     virtual HistoryInfo write_history(_impl::OutputStream&) = 0;
-    virtual ~TableWriter() noexcept
-    {
-    }
+    virtual ~TableWriter() noexcept {}
 };
 
 inline const Table* Group::do_get_table(size_t ndx) const
@@ -1214,8 +1200,7 @@ public:
     }
 
     static void get_version_and_history_info(const Allocator& alloc, ref_type top_ref,
-                                             _impl::History::version_type& version,
-                                             int& history_type,
+                                             _impl::History::version_type& version, int& history_type,
                                              int& history_schema_version) noexcept
     {
         Array top{const_cast<Allocator&>(alloc)};
@@ -1252,6 +1237,8 @@ public:
     {
         return Group::get_target_file_format_version_for_session(current_file_format_version, history_type);
     }
+
+    static void fake_target_file_format(const std::optional<int> format) noexcept;
 };
 
 
@@ -1269,9 +1256,9 @@ public:
     };
 
     struct Link {
-        TableKey origin_table;     ///< A group-level table.
-        ColKey origin_col_key;     ///< Link column being nullified.
-        ObjKey origin_key;         ///< Row in column being nullified.
+        TableKey origin_table; ///< A group-level table.
+        ColKey origin_col_key; ///< Link column being nullified.
+        ObjKey origin_key;     ///< Row in column being nullified.
         /// The target row index which is being removed. Mostly relevant for
         /// LinkList (to know which entries are being removed), but also
         /// valid for Link.

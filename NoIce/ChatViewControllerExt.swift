@@ -12,7 +12,7 @@ import InputBarAccessoryView
 
 extension ChatViewController: MessagesDataSource{
   func currentSender() -> SenderType {
-    return Sender(id: GlobalVariables.userLogged.cloudId, displayName: "")
+    return Sender(id: globalVariables.userLogged.cloudId, displayName: "")
   }
   
   func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
@@ -37,7 +37,7 @@ extension ChatViewController: MessagesLayoutDelegate {
   }
   
   func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-    avatarView.image = message.sender.senderId == GlobalVariables.userLogged.cloudId ? GlobalVariables.userLogged.photoProfile : self.userSelected.photoProfile
+    avatarView.image = message.sender.senderId == globalVariables.userLogged.cloudId ? globalVariables.userLogged.photoProfile : self.userSelected.photoProfile
   }
   
   func footerViewSize(for message: MessageType, at indexPath: IndexPath,
@@ -121,9 +121,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate{
   private func insertMessages(_ data: [Any]) {
     
     for component in data {
-      let user = Sender(id: GlobalVariables.userLogged.cloudId, displayName: "text")
+      let user = Sender(id: globalVariables.userLogged.cloudId, displayName: "text")
       if let str = component as? String {
-        let message = Message(from: GlobalVariables.userLogged!.cloudId, to: self.userSelected.cloudId, text: str)
+        let message = Message(from: globalVariables.userLogged!.cloudId, to: self.userSelected.cloudId, text: str)
         insertNewMessage(message)
       }
 //      } else if let img = component as? UIImage {

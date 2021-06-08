@@ -66,7 +66,7 @@
 "mVM-3K-jxs.title" = "Conectados";
 
 /* Class = "UIButton"; normalTitle = "Sign Out"; ObjectID = "nZq-Jq-L0F"; */
-"nZq-Jq-L0F.normalTitle" = "Cerrar Sesion";
+"nZq-Jq-L0F.normalTitle" = "Cerrar";
 
 /* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "qcW-q7-Ojn"; */
 "qcW-q7-Ojn.title" = "Item";
@@ -79,3 +79,7 @@
 
 /* Class = "UITextView"; text = "Click photo to chat or Slide it to hide and block."; ObjectID = "Eal-HZ-VB9"; */
 "Eal-HZ-VB9.text" = "Click sobre la foto para chatear o desplaza para ocultar y bloquear.";
+
+"heZ-ro-wjJ.text" = "Rompe el hielo y encuentra pareja ahora";
+
+"mXL-bD-eCK.normalTitle" = "Entrar";

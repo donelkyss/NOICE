@@ -350,7 +350,7 @@ struct R: Rswift.Validatable {
       fileprivate init() {}
     }
 
-    /// This `R.string.main` struct is generated, and contains static references to 27 localization keys.
+    /// This `R.string.main` struct is generated, and contains static references to 29 localization keys.
     struct main {
       /// es translation: Bloquear
       ///
@@ -372,7 +372,7 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: es
       static let qXcIaTA2Text = Rswift.StringResource(key: "QXc-Ia-tA2.text", tableName: "Main", bundle: R.hostingBundle, locales: ["es"], comment: nil)
-      /// es translation: Cerrar Sesion
+      /// es translation: Cerrar
       ///
       /// Locales: es
       static let nZqJqL0FNormalTitle = Rswift.StringResource(key: "nZq-Jq-L0F.normalTitle", tableName: "Main", bundle: R.hostingBundle, locales: ["es"], comment: nil)
@@ -416,6 +416,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: es
       static let qkoQk2OsNormalTitle = Rswift.StringResource(key: "QKO-Qk-2Os.normalTitle", tableName: "Main", bundle: R.hostingBundle, locales: ["es"], comment: nil)
+      /// es translation: Entrar
+      ///
+      /// Locales: es
+      static let mXLBDECKNormalTitle = Rswift.StringResource(key: "mXL-bD-eCK.normalTitle", tableName: "Main", bundle: R.hostingBundle, locales: ["es"], comment: nil)
       /// es translation: Item
       ///
       /// Locales: es
@@ -456,6 +460,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: es
       static let qGZUk4Title = Rswift.StringResource(key: "24q-gZ-uk4.title", tableName: "Main", bundle: R.hostingBundle, locales: ["es"], comment: nil)
+      /// es translation: Rompe el hielo y encuentra pareja ahora
+      ///
+      /// Locales: es
+      static let heZRoWjJText = Rswift.StringResource(key: "heZ-ro-wjJ.text", tableName: "Main", bundle: R.hostingBundle, locales: ["es"], comment: nil)
       /// es translation: usuarios
       ///
       /// Locales: es
@@ -536,7 +544,7 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("QXc-Ia-tA2.text", tableName: "Main", bundle: bundle, comment: "")
       }
 
-      /// es translation: Cerrar Sesion
+      /// es translation: Cerrar
       ///
       /// Locales: es
       static func nZqJqL0FNormalTitle(preferredLanguages: [String]? = nil) -> String {
@@ -701,6 +709,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("QKO-Qk-2Os.normalTitle", tableName: "Main", bundle: bundle, comment: "")
       }
 
+      /// es translation: Entrar
+      ///
+      /// Locales: es
+      static func mXLBDECKNormalTitle(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("mXL-bD-eCK.normalTitle", tableName: "Main", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Main", preferredLanguages: preferredLanguages) else {
+          return "mXL-bD-eCK.normalTitle"
+        }
+
+        return NSLocalizedString("mXL-bD-eCK.normalTitle", tableName: "Main", bundle: bundle, comment: "")
+      }
+
       /// es translation: Item
       ///
       /// Locales: es
@@ -849,6 +872,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("24q-gZ-uk4.title", tableName: "Main", bundle: bundle, comment: "")
+      }
+
+      /// es translation: Rompe el hielo y encuentra pareja ahora
+      ///
+      /// Locales: es
+      static func heZRoWjJText(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("heZ-ro-wjJ.text", tableName: "Main", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Main", preferredLanguages: preferredLanguages) else {
+          return "heZ-ro-wjJ.text"
+        }
+
+        return NSLocalizedString("heZ-ro-wjJ.text", tableName: "Main", bundle: bundle, comment: "")
       }
 
       /// es translation: usuarios
